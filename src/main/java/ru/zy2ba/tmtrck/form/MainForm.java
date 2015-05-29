@@ -219,15 +219,18 @@ class MainForm {
         jfrm.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                jfrm.setVisible(false);
+                jfrm.dispose();
                 PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
                 userAccount.setIsWorking(false);
                 userAccount.setLastActivity();
                 prepodManager.update(userAccount);
-                super.windowClosing(e);
+                //super.windowClosing(e);
+                new MainForm("Был совершён выход из системы. ");
             }
         });
         jfrm.setPreferredSize(new Dimension(860, 540));
-        jfrm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jfrm.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jfrm.setLayout(new GridLayout(1, 1));
 
         jtpTopMenu = new JTabbedPane(SwingConstants.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
