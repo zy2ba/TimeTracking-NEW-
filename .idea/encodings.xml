@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/JavaDoc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/README.md" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dependency-reduced-pom.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pom.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ru" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/zy2ba/tmtrck/entity/Prepod.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/zy2ba/tmtrck/form/InputPanel.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/zy2ba/tmtrck/form/MainForm.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/target" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ФАВТ_ЭВМ_11_back.xls" charset="UTF-8" />
+  </component>
+</project>

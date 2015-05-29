@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				   		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<import resource="dataContext.xml" />
+
+	<import resource="propertiesContext.xml" />
+
+	<bean id="prepodManager" class=" ru.zy2ba.tmtrck.manager.impl.PrepodManagerImpl"></bean>
+	<bean id="pairManager" class="ru.zy2ba.tmtrck.manager.impl.PairManagerImpl"></bean>
+	<bean id="classroomManager" class="ru.zy2ba.tmtrck.manager.impl.ClassroomManagerImpl"></bean>
+	<bean id="pairNameManager" class="ru.zy2ba.tmtrck.manager.impl.PairNameManagerImpl"></bean>
+	<bean id="pairDateManager" class="ru.zy2ba.tmtrck.manager.impl.PairDateManagerImpl"></bean>
+	<bean id="pairNumManager" class="ru.zy2ba.tmtrck.manager.impl.PairNumManagerImpl"></bean>
+	<bean id="groupManager" class="ru.zy2ba.tmtrck.manager.impl.GroupManagerImpl"></bean>
+	<bean id="practiceManager" class="ru.zy2ba.tmtrck.manager.impl.PracticeManagerImpl"></bean>
+	<bean id="kursRabManager" class="ru.zy2ba.tmtrck.manager.impl.KursRabManagerImpl"></bean>
+	<bean id="kursProjectManager" class="ru.zy2ba.tmtrck.manager.impl.KursProjectManagerImpl"></bean>
+	<bean id="examManager" class="ru.zy2ba.tmtrck.manager.impl.ExamManagerImpl"></bean>
+	<bean id="diplomaProjectManager" class="ru.zy2ba.tmtrck.manager.impl.DiplomaProjectImpl"></bean>
+	<bean id="consultManager" class="ru.zy2ba.tmtrck.manager.impl.ConsultManagerImpl"></bean>
+	<bean id="autumnSpringSpacerManager" class="ru.zy2ba.tmtrck.manager.impl.AutumnSpringSpacerManagerImpl"></bean>
+	<bean id="planManager" class="ru.zy2ba.tmtrck.manager.impl.PlanManagerImpl"></bean>
+	<bean id="planTableManager" class="ru.zy2ba.tmtrck.manager.impl.PlanTableManagerImpl"></bean>
+	<bean id="GAKManager" class="ru.zy2ba.tmtrck.manager.impl.GAKManagerImpl"></bean>
+	<bean id="zachetManager" class="ru.zy2ba.tmtrck.manager.impl.ZachetManagerImpl"></bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>messages</value>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="ru.zy2ba.tmtrck" />
+
+	<!-- Used for Load time Wave -->
+<!-- 	<context:load-time-weaver /> -->
+
+	<tx:annotation-driven />
+
+</beans>

@@ -1,0 +1,7 @@
+<root>
+  <item name='ru.zy2ba.tmtrck.form.MainForm'>
+    <annotation name='java.lang.SuppressWarnings'>
+      <val val="&quot;ALL&quot;"/>
+    </annotation>
+  </item>
+</root>
