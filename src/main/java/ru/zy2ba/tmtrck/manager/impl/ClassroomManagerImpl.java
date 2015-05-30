@@ -25,8 +25,7 @@ public class ClassroomManagerImpl implements ClassroomManager {
            // entity.setId(persistClassroom.getId());
         }else {
 
-        Classroom savedClassroom = classroomDao.saveAndFlush(entity);
-        return savedClassroom;}
+            return classroomDao.saveAndFlush(entity);}
     }
 
     @Override

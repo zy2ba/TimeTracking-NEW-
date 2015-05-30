@@ -28,7 +28,6 @@ import java.util.*;
  * Created by Zy2ba on 17.05.2015.
  */
 public class YearReportUtil {
-    private FileOutputStream fileOutputStream;
 
     public void invoke(Component comp, LocalDate startDate, LocalDate finishDate) {
         Workbook wb = new HSSFWorkbook();
@@ -156,7 +155,7 @@ public class YearReportUtil {
         try {
             JFileChooser saveFile = new JFileChooser();
             if (saveFile.showSaveDialog(comp) == JFileChooser.APPROVE_OPTION) {
-                fileOutputStream = new FileOutputStream(saveFile.getSelectedFile());
+                FileOutputStream fileOutputStream = new FileOutputStream(saveFile.getSelectedFile());
                 wb.write(fileOutputStream);
                 fileOutputStream.close();
             }

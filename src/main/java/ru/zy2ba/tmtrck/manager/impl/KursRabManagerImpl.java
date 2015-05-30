@@ -56,7 +56,7 @@ public class KursRabManagerImpl implements KursRabManager ,ActivityManager<KursR
     }
 
     @Override
-    public ArrayList getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<KursRab> getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
         ArrayList<KursRab> kursRabs = new ArrayList<>();
 
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){

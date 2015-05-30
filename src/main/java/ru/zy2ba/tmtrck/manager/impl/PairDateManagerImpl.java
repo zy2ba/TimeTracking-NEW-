@@ -29,7 +29,7 @@ public class PairDateManagerImpl implements PairDateManager {
     }
 
     @Override
-    public ArrayList findByDate(LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<PairDate> findByDate(LocalDate startDate, LocalDate finishDate) {
         ArrayList<PairDate> findDates = new ArrayList<>();
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){
             PairDate date= pairDateDao.findByDate(d);

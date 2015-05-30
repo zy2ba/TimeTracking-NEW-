@@ -17,5 +17,5 @@ public interface ActivityManager<T> extends EntityManager<T>{
     ArrayList<T> getByPrepod(Prepod prepod);
 
     ArrayList<T> getByPrepodDateTypeOfLoad(Prepod prepod,LocalDate startDate,LocalDate finishDate,TypeOfLoad typeOfLoad);
-    ArrayList<T> getByPrepodDateTypeOfLoad(Prepod prepod,LocalDate date,TypeOfLoad typeOfLoad);
+    ArrayList<T> getByPrepodDateTypeOfLoad(Prepod prepod,LocalDate date, @SuppressWarnings("SameParameterValue") TypeOfLoad typeOfLoad);
 }

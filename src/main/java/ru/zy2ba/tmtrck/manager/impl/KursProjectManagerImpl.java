@@ -55,7 +55,7 @@ public class KursProjectManagerImpl implements KursProjectManager ,ActivityManag
     }
 
     @Override
-    public ArrayList getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<KursProject> getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
         ArrayList<KursProject> kursProjects = new ArrayList<>();
 
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){

@@ -59,7 +59,7 @@ public class Zachet implements SettableActivity,TimeTableElement {
         return peoplesNum;
     }
 
-    public void setPeoplesNum(int peoplesNum) {
+    private void setPeoplesNum(int peoplesNum) {
         this.peoplesNum = peoplesNum;
     }
 
@@ -151,7 +151,7 @@ public class Zachet implements SettableActivity,TimeTableElement {
 
     @Override
     public String getName() {
-        return "Зачёт "+String.format("%.2g",(double)factor*peoplesNum)+" часов";
+        return "Зачёт "+String.format("%.2g", factor *peoplesNum)+" часов";
     }
 
     @Override

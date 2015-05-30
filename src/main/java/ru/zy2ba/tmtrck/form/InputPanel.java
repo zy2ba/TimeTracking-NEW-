@@ -8,9 +8,9 @@ import java.awt.*;
  */
 class InputPanel extends JPanel {
 
-    private JTextField username;
-    private JTextField passWord;
-    private JTextField userlastname;
+    private final JTextField username;
+    private final JTextField passWord;
+    private final JTextField userlastname;
 
     public InputPanel() {
 

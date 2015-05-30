@@ -56,7 +56,7 @@ public class ZachetManagerImpl implements ActivityManager<Zachet>,ZachetManager 
     }
 
     @Override
-    public ArrayList getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<Zachet> getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
         ArrayList<Zachet> findexamArrayList = new ArrayList<>();
 
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){

@@ -56,7 +56,7 @@ public class PracticeManagerImpl implements PracticeManager,ActivityManager<Prac
     }
 
     @Override
-    public ArrayList getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<Practice> getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
         ArrayList<Practice> practices = new ArrayList<>();
 
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){

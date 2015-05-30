@@ -21,22 +21,11 @@ import java.util.StringTokenizer;
  * Created by Zy2ba on 19.05.2015.
  */
 public class PlanParser {
-    private File file;
+    private final File file;
     private Workbook wb;
-    private Iterator<Row> rowIterator;
-    Row row;
-    String prepodName;
-    String prepodLastName;
-    Prepod prepod;
+    private Prepod prepod;
     private int startYear;
     private int finishYear;
-    private PlanTable autumnBudgetTable;
-    private PlanTable springBudgetTable;
-    private PlanTable autumnPlatnoTable;
-    private PlanTable springPlatnoTable;
-    private PlanTable autumnShortTable;
-    private PlanTable springShortTable;
-    private Plan makeablePlan;
     private Plan platnoPlan;
     private Plan shortPlan;
 
@@ -50,11 +39,11 @@ public class PlanParser {
             e.printStackTrace();
         }
 
-        makeablePlan = new Plan();
+        Plan makeablePlan = new Plan();
         Sheet sheet = wb.getSheetAt(0);
-        rowIterator = sheet.iterator();
+        Iterator<Row> rowIterator = sheet.iterator();
         while(rowIterator.hasNext()){
-            row = rowIterator.next();
+            Row row = rowIterator.next();
             Iterator<Cell> cells = row.cellIterator();
             Cell cell = cells.next();
             if(cell.getCellType()==Cell.CELL_TYPE_STRING ){
@@ -64,10 +53,10 @@ public class PlanParser {
                         row = rowIterator.next();
                         cell = row.getCell(0);
                         StringTokenizer names = new StringTokenizer(cell.getStringCellValue());
-                        prepodLastName = names.nextToken();
-                        prepodName = names.nextToken();
+                        String prepodLastName = names.nextToken();
+                        String prepodName = names.nextToken();
                         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
-                        prepod = prepodManager.findByNameAndLastName(prepodName,prepodLastName);
+                        prepod = prepodManager.findByNameAndLastName(prepodName, prepodLastName);
                         if(prepod==null) break;
                         rowIterator.next();
                         rowIterator.next();
@@ -108,7 +97,7 @@ public class PlanParser {
                             cell = row.getCell(0);
                         }
                         cells = row.cellIterator();
-                        autumnBudgetTable = new PlanTable();
+                        PlanTable autumnBudgetTable = new PlanTable();
                         cells.next();
                         cells.next();
                         cells.next();
@@ -143,7 +132,7 @@ public class PlanParser {
                         }
                         cells = row.cellIterator();
 
-                        springBudgetTable = new PlanTable();
+                        PlanTable springBudgetTable = new PlanTable();
                         cells.next();
                         cells.next();
                         cell = cells.next();
@@ -185,7 +174,7 @@ public class PlanParser {
                         cells = row.cellIterator();
                         cells.next();
                         cells.next();
-                        autumnPlatnoTable = new PlanTable();
+                        PlanTable autumnPlatnoTable = new PlanTable();
                         cell = cells.next();
                         autumnPlatnoTable.setLection(cell.getNumericCellValue());
                         cell = cells.next();
@@ -219,7 +208,7 @@ public class PlanParser {
                         cells.next();
                         cells.next();
 
-                        springPlatnoTable = new PlanTable();
+                        PlanTable springPlatnoTable = new PlanTable();
                         cell = cells.next();
                         springPlatnoTable.setLection(cell.getNumericCellValue());
                         cell = cells.next();
@@ -259,7 +248,7 @@ public class PlanParser {
                         cells = row.cellIterator();
                         cells.next();
                         cells.next();
-                        autumnShortTable = new PlanTable();
+                        PlanTable autumnShortTable = new PlanTable();
                         cell = cells.next();
                         autumnShortTable.setLection(cell.getNumericCellValue());
                         cell = cells.next();
@@ -293,7 +282,7 @@ public class PlanParser {
                         cells.next();
                         cells.next();
 
-                        springShortTable = new PlanTable();
+                        PlanTable springShortTable = new PlanTable();
                         cell = cells.next();
                         springShortTable.setLection(cell.getNumericCellValue());
                         cell = cells.next();

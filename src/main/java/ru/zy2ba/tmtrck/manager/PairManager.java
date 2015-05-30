@@ -17,6 +17,6 @@ public interface PairManager extends EntityManager<Pair> {
     boolean findPairDublicate(Pair entity);
     ArrayList<Pair> findDatesPrepod(Prepod prepod, ArrayList<PairDate> pairDates);
     ArrayList<Pair> findCarriedPairsForPrepodByDate(Prepod prepod,PairDate pairDate);
-    ArrayList<Pair> searchCustom(String prepodName,String prepodLastName,LocalDate startDate, LocalDate finishDate,int isCarrieadOutStatus,int isOnHolidayStatus,int separateVia);
-    ArrayList<Pair> searchCustom(String prepodName,String prepodLastName,int isCarrieadOutStatus,int isOnHolidayStatus,int separateVia);
+    ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, LocalDate startDate, LocalDate finishDate, int isCarrieadOutStatus, int isOnHolidayStatus);
+    ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, int isCarrieadOutStatus, int isOnHolidayStatus);
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public interface PairDateManager extends EntityManager<PairDate>{
     PairDate findByDate(LocalDate dateTime) throws HibernateJdbcException;
-    ArrayList findByDate(LocalDate startDate,LocalDate finishDate);
+    ArrayList<PairDate> findByDate(LocalDate startDate,LocalDate finishDate);
     PairDate findByDateAndHoliday(LocalDate date,boolean holiday);
     ArrayList<PairDate> findByDateAndHoliday(LocalDate startDate,LocalDate finishDate, boolean holiday);
     void setHoliday(LocalDate date,boolean holiday)throws HibernateJdbcException;

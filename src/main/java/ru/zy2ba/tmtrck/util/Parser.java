@@ -38,7 +38,6 @@ public class Parser {
     private Row row;
     private ArrayList<String> pairsList;
     private ArrayList<Integer> wrongCellsNumbers;
-    private InputStream in;
     private ArrayList<LocalDate> mondayFirst;
     private ArrayList<LocalDate> tuesdayFirst;
     private ArrayList<LocalDate> wednesdayFirst;
@@ -103,7 +102,7 @@ public class Parser {
         wrongCellsNumbers = new ArrayList<>();
         result = "";
         try {
-            in = new FileInputStream(this.file);
+            InputStream in = new FileInputStream(this.file);
             wb = new HSSFWorkbook(in);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(parent, ex);
@@ -390,7 +389,7 @@ public class Parser {
                                         pairBuilder.withPairDates(pairDates);}
                                         break;
                                     case 1:
-                                        if(tuesdayFirst.equals(null)?tuesdayFirst.size()>0: (thursdaySecond.equals(null)) && thursdaySecond.size() > 0){
+                                        if(tuesdayFirst.equals(null)?tuesdayFirst.size()>0: (tuesdaySecond.equals(null)) && thursdaySecond.size() > 0){
                                         ArrayList<PairDate> pairDates1 = new ArrayList<>();
                                         PairDateBuilder dateBuilder1 = PairDateBuilder.getPairDateBuilder();
                                         if(tuesdayFirst!=null)for (LocalDate datetime : tuesdayFirst) {
@@ -535,11 +534,11 @@ public class Parser {
                                         }
                                         break;
                                     case 1:
-                                        if(tuesdayFirst!=null)
-                                        if(tuesdayFirst.size()>0) {
+                                        if(tuesdaySecond!=null)
+                                        if(tuesdaySecond.size()>0) {
                                             ArrayList<PairDate> pairDates1 = new ArrayList<>();
                                             PairDateBuilder dateBuilder1 = PairDateBuilder.getPairDateBuilder();
-                                            for (LocalDate datetime : tuesdayFirst) {
+                                            for (LocalDate datetime : tuesdaySecond) {
                                                 pairDates1.add(dateBuilder1.withPairDate(datetime).withHoliday(false).build());
                                             }
                                             pairBuilder.withPairDates(pairDates1);

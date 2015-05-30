@@ -14,8 +14,6 @@ public class AutumnSpringSpacerManagerImpl implements AutumnSpringSpacerManager 
     @Autowired
     private AutumnSpringSpacerDao autumnSpringSpacerDao;
 
-    int lastAugustDateNumber = 243;
-
     @Override
     public AutumnSpringSpacer create(AutumnSpringSpacer entity) throws HibernateJdbcException {
         AutumnSpringSpacer persistSpacer = autumnSpringSpacerDao.findByStartYear(entity.getStartYear());
@@ -51,11 +49,12 @@ public class AutumnSpringSpacerManagerImpl implements AutumnSpringSpacerManager 
     @Override
     public AutumnSpringSpacer getSpacerForDate(LocalDate date) {
         int year = date.getYear();
+        int lastAugustDateNumber = 243;
         if ((year%4==0&& year%100!=0)||(year%400==0) ){
                 lastAugustDateNumber = 244;
         } else lastAugustDateNumber = 243;
 
-        if (date.getDayOfYear()>lastAugustDateNumber){
+        if (date.getDayOfYear()> lastAugustDateNumber){
             return autumnSpringSpacerDao.findByStartYear(year);
         }else return autumnSpringSpacerDao.findByStartYear(year-1);
     }

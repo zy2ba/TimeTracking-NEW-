@@ -15,7 +15,6 @@ import ru.zy2ba.tmtrck.manager.*;
 import ru.zy2ba.tmtrck.util.Parser;
 import ru.zy2ba.tmtrck.util.PlanParser;
 import ru.zy2ba.tmtrck.util.ResourceLocator;
-import ru.zy2ba.tmtrck.util.reports.CustomReportUtil;
 import ru.zy2ba.tmtrck.util.reports.CustomReportUtil3;
 import ru.zy2ba.tmtrck.util.reports.YearReportUtil;
 
@@ -35,15 +34,7 @@ import java.util.*;
  */
 class MainForm {
     private JFrame jfrm;//главная форма
-    private JTabbedPane jtpTopMenu;//основные вкладки
-    private JPanel jpTMReport; //вкладка создания отчётов
-    private JScrollPane jspTMReport;//скролл панели внутри вкладки отчётов
-    private JPanel jpTMTmTbl;//вкладка с расписанием
     private JScrollPane jspTMTmTbl;//скролл панели внутри вкладки с расписанием
-    private JTabbedPane jtpAdd;
-    private JTextField jtfAddPrepodLastName;
-    private JTextField jtfAddPrepodMiddleName;
-    private JPanel jpAddDates;
     private JDateChooser jdcAddDatesStart;
     private JTextField jtfTmTblLastName;
     private JDateChooser jdcAddDatesFinish;
@@ -53,47 +44,29 @@ class MainForm {
     private JTextField jtfReportLastName;
     private JDateChooser jcHolidayStart;
     private JDateChooser jcHolidayFinish;
-    private JButton jbHolidater;
-    private JComboBox cbAddDates;
     private JButton jbAddDates;
-    private JComboBox jComboBox;
-    private JComboBox cbHolidayFactor;
-    private JLabel jlTmTbl1;
+    private JComboBox<String> cbHolidayFactor;
     private JTextField jtfTmTblName;
     private JButton jbTmTblSearch;
-    private JComboBox jcbTmTblIsHoliday;
+    private JComboBox<String> jcbTmTblIsHoliday;
     private ArrayList<Pair> arrayListPrepodPairs;
     private String str;
     private boolean admin;
-    private JButton jbMakeReport;
-    private JComboBox jcbReportType;
-    private JScrollPane jspCarriedOuter;
-    private JPanel jpCarriedOuter;
-    private JPanel jpCarriedOuterTmTblIn1;
+    private JComboBox<String> jcbReportType;
     private JDateChooser jdcCarriedOuterByDateStart;
     private JDateChooser jdcCarriedOuterByDateFinish;
-    private JPanel jpCarriedOuterTimeTbl;
     private JButton jbCarriedOuterTmTbl;
-    private JPanel jpCarriedOuterTmTblIn3;
-    private JPanel jpCarriedOuterTmTblIn4;
-    private JPanel jpCarriedOuterTmTblIn2;
-    private JTextField jtfCOBDName;
-    private JTextField jtfCOBDLastName;
-    private JComboBox jcbCarriedOuterByDate;
-    private static Dimension dStandartSmallElement = new Dimension(130,25);
-    private static Dimension dDateChooser = new Dimension(95,30);
-    private JComboBox jcbTmTblIsCarriedOut;
+    private JComboBox<String> jcbCarriedOuterByDate;
+    private static final Dimension dStandartSmallElement = new Dimension(130,25);
+    private static final Dimension dDateChooser = new Dimension(95,30);
+    private JComboBox<String> jcbTmTblIsCarriedOut;
     private JDateChooser jdcTmTblStart;
     private JDateChooser jdcTmTblFinish;
     private JCheckBox jchbTmTblDate;
     private Prepod userAccount;
-    private JTabbedPane jtpCabinet;
-    private JPanel jpCabinetInfo;
-    private JPanel jpCabinetPlan;
-    private JComboBox jcbPairNum;
+    private JComboBox<String> jcbPairNum;
     private JList jlstTmTbl;
-    private DefaultListModel listModel;
-    private ArrayList<Pair> displayedPairs;
+    private DefaultListModel<String> listModel;
     private JButton jbTmTblCarriedOut;
     private JPasswordField jpfCPCOldPass;
     private JPasswordField jpfCPCNewPass;
@@ -174,12 +147,6 @@ class MainForm {
             "2018/19"
     };
     private ArrayList<TimeTableElement> timeTableElements;
-    private ArrayList<Consult> consultArrayList;
-    private ArrayList<DiplomaProject> diplomaProjectArrayList;
-    private ArrayList<Exam> examArrayList;
-    private ArrayList<KursProject> kursProjectArrayList;
-    private ArrayList<KursRab> kursRabArrayList;
-    private ArrayList<Practice> practiceArrayList;
     private LocalDate ldCOFO;
     private PlanTable planTable;
     private double alreadyHours;
@@ -233,9 +200,9 @@ class MainForm {
         jfrm.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jfrm.setLayout(new GridLayout(1, 1));
 
-        jtpTopMenu = new JTabbedPane(SwingConstants.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
+        JTabbedPane jtpTopMenu = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        jpTMReport = new JPanel(new FlowLayout());//вкладка создания отчётов
+        JPanel jpTMReport = new JPanel(new FlowLayout());
         jdcReportStart = new JDateChooser(new LocalDate().toDate());
         jdcReportStart.setPreferredSize(dDateChooser);
         jdcReportStart.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -243,31 +210,31 @@ class MainForm {
         jcReportFinish = new JDateChooser(new LocalDate().toDate());
         jcReportFinish.setPreferredSize(dDateChooser);
 
-        jbMakeReport = new JButton("Создать отчёт");
+        JButton jbMakeReport = new JButton("Создать отчёт");
         jbMakeReport.setPreferredSize(dStandartSmallElement);
         jbMakeReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(jcbReportType.getSelectedIndex()==0){
+                if (jcbReportType.getSelectedIndex() == 0) {
                     performYearReport();
 
-                }else if(jcbReportType.getSelectedIndex()==1){
+                } else if (jcbReportType.getSelectedIndex() == 1) {
                     performCustomReport();
                 }
             }
         });
 
-        jcbReportType = new JComboBox(vcbReport);
+        jcbReportType = new JComboBox<>(vcbReport);
         jpTMReport.add(jcbReportType);
         jpTMReport.add(jdcReportStart);
         jpTMReport.add(jcReportFinish);
         jpTMReport.add(jbMakeReport);
 
-        jspTMReport = new JScrollPane(jpTMReport);
+        JScrollPane jspTMReport = new JScrollPane(jpTMReport);
         jspTMReport.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jspTMReport.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        jpTMTmTbl = new JPanel();
+        JPanel jpTMTmTbl = new JPanel();
         GridBagLayout gblTmTbl = new GridBagLayout();
         jpTMTmTbl.setLayout(gblTmTbl);
         GridBagConstraints gbcTmTbl = new GridBagConstraints();
@@ -276,15 +243,15 @@ class MainForm {
         //jspTMTmTbl.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         //jspTMTmTbl.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        jtpAdd = new JTabbedPane(SwingConstants.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
+        JTabbedPane jtpAdd = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
 
-        jtfAddPrepodLastName = new JTextField();
+        JTextField jtfAddPrepodLastName = new JTextField();
         jtfAddPrepodLastName.setPreferredSize(dStandartSmallElement);
-        jtfAddPrepodMiddleName = new JTextField();
+        JTextField jtfAddPrepodMiddleName = new JTextField();
         jtfAddPrepodMiddleName.setPreferredSize(dStandartSmallElement);
 
-        jpAddDates = new JPanel(new FlowLayout());
+        JPanel jpAddDates = new JPanel(new FlowLayout());
         jdcAddDatesStart = new JDateChooser(new LocalDate().toDate());
         jdcAddDatesStart.setPreferredSize(dDateChooser);
         jdcAddDatesStart.setToolTipText("Дата на которой начинает применяться шаблон");
@@ -294,11 +261,10 @@ class MainForm {
         jpAddDates.add(new JLabel("Дата "));
         jpAddDates.add(jdcAddDatesStart);
         jpAddDates.add(jdcAddDatesFinish);
-        jComboBox = new JComboBox(vcbAddDates);
+        JComboBox<String> jComboBox = new JComboBox<>(vcbAddDates);
         jComboBox.setSelectedIndex(1);
-        cbAddDates = jComboBox;
         jpAddDates.add(new JLabel("Первыми являются недели:"));
-        jpAddDates.add(cbAddDates);
+        jpAddDates.add(jComboBox);
         jbAddDates = new JButton("Подгрузить");
         jbAddDates.setPreferredSize(dStandartSmallElement);
         jbAddDates.setToolTipText("Прогрузить использую xls файл в качестве шаблона");
@@ -323,7 +289,7 @@ class MainForm {
         jcHolidayFinish = new JDateChooser(new LocalDate().toDate());
         jcHolidayFinish.setPreferredSize(dDateChooser);
 
-        cbHolidayFactor = new JComboBox(vcbHolidays);
+        cbHolidayFactor = new JComboBox<>(vcbHolidays);
         cbHolidayFactor.setEditable(false);
 
         ////////////расписание
@@ -345,7 +311,7 @@ class MainForm {
         gbcTmTbl.gridwidth = 1;
         gbcTmTbl.weightx = 0.95;
         gbcTmTbl.anchor = GridBagConstraints.EAST;
-        jlTmTbl1 = new JLabel("Имя:");
+        JLabel jlTmTbl1 = new JLabel("Имя:");
         gblTmTbl.setConstraints(jlTmTbl1, gbcTmTbl);
         jpTMTmTbl.add(jlTmTbl1);
 
@@ -412,13 +378,13 @@ class MainForm {
 
         gbcTmTbl.weightx = 1.5;
         gbcTmTbl.fill =GridBagConstraints.BOTH;
-        jcbTmTblIsHoliday = new JComboBox(vcbTmTblIsHoliday);
+        jcbTmTblIsHoliday = new JComboBox<>(vcbTmTblIsHoliday);
         jcbTmTblIsHoliday.setPreferredSize(dStandartSmallElement);
         gblTmTbl.setConstraints(jcbTmTblIsHoliday, gbcTmTbl);
         jpTMTmTbl.add(jcbTmTblIsHoliday);
 
         gbcTmTbl.gridwidth = GridBagConstraints.REMAINDER;
-        jcbTmTblIsCarriedOut = new JComboBox(vcbTmTblIsCarriedOut);
+        jcbTmTblIsCarriedOut = new JComboBox<>(vcbTmTblIsCarriedOut);
         jcbTmTblIsCarriedOut.setPreferredSize(dStandartSmallElement);
         gblTmTbl.setConstraints(jcbTmTblIsCarriedOut, gbcTmTbl);
         jpTMTmTbl.add(jcbTmTblIsCarriedOut);
@@ -442,7 +408,7 @@ class MainForm {
         gblTmTbl.setConstraints(jbTmTblSearch, gbcTmTbl);
         jpTMTmTbl.add(jbTmTblSearch);
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
 
         jlstTmTbl = new JList<>(listModel);
         jlstTmTbl.setFont(new Font("MONOSPACED", Font.BOLD, 14));
@@ -475,15 +441,15 @@ class MainForm {
         jpTMTmTbl.add(jbTmTblCarriedOut);
         jbTmTblCarriedOut.setVisible(false);
 
-        jbHolidater = new JButton("Применить");
+        JButton jbHolidater = new JButton("Применить");
         jbHolidater.setPreferredSize(dStandartSmallElement);
         jbHolidater.setToolTipText("Устанавливает свойство для УЖЕ существующих дат");
         jbHolidater.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(jcHolidayStart.getDate().after(jcHolidayFinish.getDate())) {
-                    JOptionPane.showMessageDialog(jfrm,"Дата начала не должна быть позже даты конца!");
-                }else
+                if (jcHolidayStart.getDate().after(jcHolidayFinish.getDate())) {
+                    JOptionPane.showMessageDialog(jfrm, "Дата начала не должна быть позже даты конца!");
+                } else
                     try {
                         setHolidaysActionPerfomed();
                     } catch (AlreadyInUseException e1) {
@@ -525,44 +491,44 @@ class MainForm {
         jpAddAutumnSpringSpacer.add(jdcAASSDate);
         jpAddAutumnSpringSpacer.add(jbAASSSetTransportDate);
 
-        jtpAdd.add("Добавление дат",jpAddDates);
-        jtpAdd.add("Установка праздников и каникул",jpAddHolidays);
-        jtpAdd.add("Переходы между семестрами",jpAddAutumnSpringSpacer);
+        jtpAdd.add("Добавление дат", jpAddDates);
+        jtpAdd.add("Установка праздников и каникул", jpAddHolidays);
+        jtpAdd.add("Переходы между семестрами", jpAddAutumnSpringSpacer);
 
 
         JTabbedPane jtpCarriedOuter = new JTabbedPane();
-        jpCarriedOuter = new JPanel(new FlowLayout());
+        JPanel jpCarriedOuter = new JPanel(new FlowLayout());
         jpCarriedOuter.add(new JDateChooser(new LocalDate().plusDays(1).toDate()), dStandartSmallElement);
         jpCarriedOuter.add(new JButton("Вывести"));
-        jpCarriedOuter.add(new JTextArea(20,60));
+        jpCarriedOuter.add(new JTextArea(20, 60));
 
         jpCarriedOuter.add(new JButton("Учесть"));
         jdcCarriedOuterByDateStart = new JDateChooser(new Date());
         jdcCarriedOuterByDateFinish = new JDateChooser(new Date());
-        jpCarriedOuterTmTblIn1 = new JPanel(new GridLayout(1,0,50,0));
-        jpCarriedOuterTmTblIn2 = new JPanel(new GridLayout(1,0,25,0));
-        jpCarriedOuterTmTblIn3 = new JPanel(new GridLayout(1,0,50,0));
-        jpCarriedOuterTmTblIn4 = new JPanel(new GridLayout(1,0,50,0));
+        JPanel jpCarriedOuterTmTblIn1 = new JPanel(new GridLayout(1, 0, 50, 0));
+        JPanel jpCarriedOuterTmTblIn2 = new JPanel(new GridLayout(1, 0, 25, 0));
+        JPanel jpCarriedOuterTmTblIn3 = new JPanel(new GridLayout(1, 0, 50, 0));
+        JPanel jpCarriedOuterTmTblIn4 = new JPanel(new GridLayout(1, 0, 50, 0));
         JPanel jpCarriedOuterByDateIn5 = new JPanel(new GridLayout(1,0,50,0));
         GridLayout cobdGridLayoutOut = new GridLayout(0,1);
         cobdGridLayoutOut.setHgap(50);
         cobdGridLayoutOut.setVgap(20);
-        jpCarriedOuterTimeTbl = new JPanel(cobdGridLayoutOut);
+        JPanel jpCarriedOuterTimeTbl = new JPanel(cobdGridLayoutOut);
 
         jpCarriedOuterTmTblIn1.add(new JLabel(("Что хотим сделать:"), SwingConstants.CENTER));
-        jcbCarriedOuterByDate = new JComboBox(vcbCarriedOuterByDate);
+        jcbCarriedOuterByDate = new JComboBox<>(vcbCarriedOuterByDate);
 
         jpCarriedOuterTmTblIn1.add(jcbCarriedOuterByDate);
         jpCarriedOuterTmTblIn2.add(new JLabel("Имя:", SwingConstants.RIGHT));
-        jtfCOBDName = new JTextField();
+        JTextField jtfCOBDName = new JTextField();
         jtfCOBDName.setText(userAccount.getName());
         jtfCOBDName.setEditable(false);
         jpCarriedOuterTmTblIn2.add(jtfCOBDName);
         jpCarriedOuterTmTblIn2.add(new JLabel("Фамилия:", SwingConstants.RIGHT));
-        jtfCOBDLastName = new JTextField();
+        JTextField jtfCOBDLastName = new JTextField();
         jtfCOBDLastName.setText(userAccount.getLastName());
         jtfCOBDLastName.setEditable(false);
-        jcbPairNum = new JComboBox(vcbPairNum);
+        jcbPairNum = new JComboBox<>(vcbPairNum);
         jpCarriedOuterTmTblIn2.add(jtfCOBDLastName);
         jpCarriedOuterTmTblIn3.add(new JLabel("Начиная с:", SwingConstants.CENTER));
         jpCarriedOuterTmTblIn3.add(jdcCarriedOuterByDateStart);
@@ -671,8 +637,8 @@ class MainForm {
 
         final JDateChooser jdcCOForActivites = new JDateChooser(new Date());
         jdcCOForActivites.setPreferredSize(dStandartSmallElement);
-        final JComboBox jcbCOForActivites = new JComboBox(vcbCarriedOuterForOther);
-        final JComboBox jcbCOFATypeOfLoad = new JComboBox(vcbTypeOfLoad);
+        final JComboBox<String> jcbCOForActivites = new JComboBox<>(vcbCarriedOuterForOther);
+        final JComboBox<String> jcbCOFATypeOfLoad = new JComboBox<>(vcbTypeOfLoad);
         JButton jbCOFOrActivites = new JButton("Добавить запись о проведении");
         jbCOFOrActivites.addActionListener(new ActionListener() {
             @Override
@@ -892,6 +858,7 @@ class MainForm {
                         break;
                 }
 
+                //noinspection unchecked
                 entityManager.create(activity);
                 JOptionPane.showMessageDialog(jfrm,"Выполнено");
             }catch (IOException e1){
@@ -911,19 +878,19 @@ class MainForm {
         jpCOforActivites.add(jbCOFOrActivites);
        // jpCOforActivites.add();
 
-        jspCarriedOuter = new JScrollPane(jpCarriedOuterTimeTbl);
+        JScrollPane jspCarriedOuter = new JScrollPane(jpCarriedOuterTimeTbl);
         jtpCarriedOuter.add("Для пар по расписанию", jpCarriedOuterTimeTbl);
         jtpCarriedOuter.add("Для остального",jpCOforActivites);
         //jtpCarriedOuter.setEnabledAt(1,!userAccount.getFaculty().equals("service"));
        // jtpCarriedOuter.setEnabledAt(,!userAccount.getFaculty().equals("service"));
 
 
-        jtpCabinet = new JTabbedPane();
+        JTabbedPane jtpCabinet = new JTabbedPane();
 
 
         GridBagLayout gblCabinetInfo = new GridBagLayout();
         GridBagConstraints gbcCabinetInfo = new GridBagConstraints();
-        jpCabinetInfo = new JPanel();
+        JPanel jpCabinetInfo = new JPanel();
         jpCabinetInfo.setLayout(gblCabinetInfo);
 
         gbcCabinetInfo.weighty = 1.0;
@@ -976,7 +943,7 @@ class MainForm {
         JLabel jlCabinetInfoFaculty = new JLabel(userAccount.getFaculty());
         gblCabinetInfo.addLayoutComponent(jlCabinetInfoFaculty,gbcCabinetInfo);
 
-        jpCabinetPlan = new JPanel(new FlowLayout());
+        JPanel jpCabinetPlan = new JPanel(new FlowLayout());
         JButton jbCabinetPlan = new JButton("Выбрать индивидуальный график");
         jbCabinetPlan.addActionListener(new ActionListener() {
             @Override
@@ -1043,22 +1010,22 @@ class MainForm {
         jpCabinetPasswordChanger.add(jbCPCSetNewPassword);
 
         jtpCabinet.add("Сводная информация", jpCabinetInfo);
-        jtpCabinet.add("Индивидуальный график",jpCabinetPlan);
+        jtpCabinet.add("Индивидуальный график", jpCabinetPlan);
         //jtpCabinet.setEnabledAt(1,false);
-        jtpCabinet.add("Изменение пароля",jpCabinetPasswordChanger);
+        jtpCabinet.add("Изменение пароля", jpCabinetPasswordChanger);
 
 
 
-        jtpTopMenu.add("Расписание",jpTMTmTbl);
+        jtpTopMenu.add("Расписание", jpTMTmTbl);
         jtpTopMenu.add("Отчёты", jspTMReport);
         jtpTopMenu.add("Учёт времни", jtpCarriedOuter);
-        jtpTopMenu.add("Преподаватель",jtpCabinet);
-        jtpTopMenu.add("Функции администратора",jtpAdd);
+        jtpTopMenu.add("Преподаватель", jtpCabinet);
+        jtpTopMenu.add("Функции администратора", jtpAdd);
 
         jfrm.add(jtpTopMenu);
 
         jtpTopMenu.setEnabledAt(4, userAccount.getName().equals("root"));
-        jtpTopMenu.setEnabledAt(1,  !userAccount.getName().equals("guest"));
+        jtpTopMenu.setEnabledAt(1, !userAccount.getName().equals("guest"));
         jtpTopMenu.setEnabledAt(2, !userAccount.getName().equals("guest"));
         jtpTopMenu.setEnabledAt(3, !userAccount.getName().equals("guest"));
 
@@ -1100,10 +1067,9 @@ class MainForm {
             rebootUser();
 
         }else{
-            @SuppressWarnings("deprecated")
-            int pass1=jpfCPCNewPass.getText().hashCode();
-            int pass2=jpfCPCNewPassRepeat.getText().hashCode();
-            int pass3=jpfCPCOldPass.getText().hashCode();
+            @SuppressWarnings("deprecation") int pass1=jpfCPCNewPass.getText().hashCode();
+            @SuppressWarnings("deprecation") int pass2=jpfCPCNewPassRepeat.getText().hashCode();
+            @SuppressWarnings("deprecation") int pass3=jpfCPCOldPass.getText().hashCode();
             if(pass1!=pass2){
                 JOptionPane.showMessageDialog(jfrm,"Новый пароль и его повтор не совпадают!","Ошибка",JOptionPane.WARNING_MESSAGE);
             }else {
@@ -1151,9 +1117,7 @@ class MainForm {
 
     private void performCarriedOutByDate() throws AlreadyInUseException{
         Boolean CarriedOutFactor;
-        if(jcbCarriedOuterByDate.getSelectedIndex()==0){
-            CarriedOutFactor = true;
-        } else CarriedOutFactor = false;
+        CarriedOutFactor = jcbCarriedOuterByDate.getSelectedIndex() == 0;
         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
         Prepod prepod = prepodManager.findByNameAndLastName(userAccount.getName(), userAccount.getLastName());
         if(userAccount.getPasskey()!=prepod.getPasskey()){
@@ -1194,7 +1158,7 @@ class MainForm {
             JOptionPane.showMessageDialog(jfrm,"Дата начала не должнабыть позже даты окончания");
             return;
         }
-        Boolean holidFact = cbHolidayFactor.getSelectedIndex()==0?false:true;
+        Boolean holidFact = cbHolidayFactor.getSelectedIndex() != 0;
         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
         Prepod prepod = prepodManager.findByNameAndLastName(userAccount.getName(), userAccount.getLastName());
         if(userAccount.getPasskey()!=prepod.getPasskey()){
@@ -1229,14 +1193,15 @@ class MainForm {
         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
         Prepod prepod = prepodManager.findByNameAndLastName(jtfTmTblName.getText(),jtfTmTblLastName.getText());
         PairManager manager = (PairManager) ResourceLocator.getBean("pairManager");
+        ArrayList<Pair> displayedPairs;
         if(jchbTmTblDate.isSelected()){
-            displayedPairs = manager.searchCustom(jtfTmTblName.getText(), jtfTmTblLastName.getText(), new LocalDate(jdcTmTblStart.getDate()), new LocalDate(jdcAddDatesFinish.getDate()), jcbTmTblIsCarriedOut.getSelectedIndex(), jcbTmTblIsHoliday.getSelectedIndex(), 0);
+            displayedPairs = manager.searchCustom(jtfTmTblName.getText(), jtfTmTblLastName.getText(), new LocalDate(jdcTmTblStart.getDate()), new LocalDate(jdcAddDatesFinish.getDate()), jcbTmTblIsCarriedOut.getSelectedIndex(), jcbTmTblIsHoliday.getSelectedIndex());
         }else {
-            displayedPairs =manager.searchCustom(jtfTmTblName.getText(), jtfTmTblLastName.getText(), jcbTmTblIsCarriedOut.getSelectedIndex(), jcbTmTblIsHoliday.getSelectedIndex(), 0);
+            displayedPairs =manager.searchCustom(jtfTmTblName.getText(), jtfTmTblLastName.getText(), jcbTmTblIsCarriedOut.getSelectedIndex(), jcbTmTblIsHoliday.getSelectedIndex());
         }
         listModel.clear();
         int maxLengthPairName=0;
-                for(Pair pair:displayedPairs){
+                for(Pair pair: displayedPairs){
                     if (pair.getGroup2().getName().length()>maxLengthPairName)
                         maxLengthPairName=pair.getGroup2().getName().length();
                 }
@@ -1248,6 +1213,12 @@ class MainForm {
         KursRabManager kursRabManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
         PracticeManager practiceManager = (PracticeManager) ResourceLocator.getBean("practiceManager");
 
+        ArrayList<Practice> practiceArrayList;
+        ArrayList<KursRab> kursRabArrayList;
+        ArrayList<KursProject> kursProjectArrayList;
+        ArrayList<Exam> examArrayList;
+        ArrayList<DiplomaProject> diplomaProjectArrayList;
+        ArrayList<Consult> consultArrayList;
         if(jchbTmTblDate.isSelected()){
             consultArrayList = consultManager.getByPrepodAndDate(prepod,new LocalDate(jdcTmTblStart.getDate()), new LocalDate(jdcAddDatesFinish.getDate()));
             diplomaProjectArrayList = diplomaProjectManager.getByPrepodAndDate(prepod,new LocalDate(jdcTmTblStart.getDate()), new LocalDate(jdcAddDatesFinish.getDate()));
@@ -1266,31 +1237,31 @@ class MainForm {
 
         timeTableElements = new ArrayList<>();
 
-        for(Pair pair:displayedPairs){
+        for(Pair pair: displayedPairs){
             timeTableElements.add(pair);
         }
 
-        for (Consult consult:consultArrayList){
+        for (Consult consult: consultArrayList){
             timeTableElements.add(consult);
         }
 
-        for (DiplomaProject diplomaProject:diplomaProjectArrayList){
+        for (DiplomaProject diplomaProject: diplomaProjectArrayList){
             timeTableElements.add(diplomaProject);
         }
 
-        for (Exam exam:examArrayList){
+        for (Exam exam: examArrayList){
             timeTableElements.add(exam);
         }
 
-        for (KursProject kursProject:kursProjectArrayList){
+        for (KursProject kursProject: kursProjectArrayList){
             timeTableElements.add(kursProject);
         }
 
-        for (KursRab kursRab:kursRabArrayList){
+        for (KursRab kursRab: kursRabArrayList){
             timeTableElements.add(kursRab);
         }
 
-        for (Practice practice:practiceArrayList){
+        for (Practice practice: practiceArrayList){
             timeTableElements.add(practice);
         }
 
@@ -1315,21 +1286,21 @@ class MainForm {
         for(TimeTableElement element: timeTableElements){
             if (element.getNum()==-1){
                 if (element.getIsOnHoliday()){
-                    listModel.addElement("<html><font color=orange>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+" "+element.getName()+"("+element.getStringIsCarriedOut(false)+")");
+                    listModel.addElement((String)("<html><font color=orange>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+" "+element.getName()+"("+element.getStringIsCarriedOut(false)+")"));
 
                 }else {
-                    listModel.addElement("<html><font color=green>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+" "+element.getName()+"("+element.getStringIsCarriedOut(false)+")");
+                    listModel.addElement((String)("<html><font color=green>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+" "+element.getName()+"("+element.getStringIsCarriedOut(false)+")"));
                 }
 
             }else {
                 if (!element.getIsOnHoliday()&&element.getIsCarriedOut()){
-                    listModel.addElement("<html><font color=blue>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")");
+                    listModel.addElement((String)("<html><font color=blue>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")"));
 
                 }else if(element.getIsOnHoliday()){
-                    listModel.addElement("<html><font color=red>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")");
+                    listModel.addElement((String)("<html><font color=red>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")"));
 
                 }else if (!element.getIsCarriedOut()){
-                    listModel.addElement("<html><font color=purple>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")");
+                    listModel.addElement((String)("<html><font color=purple>"+element.getDate().toString()+","+element.getDayOfWeekString()+"|№"+(element.getNum()+1)+"|"+element.getTime()+element.getLocation()+" "+element.getGroupSpacer(maxLengthPairName)+element.getName()+"("+element.getStringIsCarriedOut(false)+")"));
 
                 }
             }

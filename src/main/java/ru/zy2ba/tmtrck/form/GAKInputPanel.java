@@ -11,11 +11,8 @@ import java.awt.event.ActionListener;
  * Created by Zy2ba on 22.05.2015.
  */
 public class GAKInputPanel extends JPanel implements ActivityInterface{
-    private JLabel jlControlHourPanel;
-    private JButton jbPlusOne;
-    private JButton jbMinus;
-    private JButton jbClear;
-    private double factor;
+    private final JLabel jlControlHourPanel;
+    private final double factor;
     private int numberOf;
 
     public GAKInputPanel() {
@@ -23,7 +20,7 @@ public class GAKInputPanel extends JPanel implements ActivityInterface{
         super(new GridBagLayout());
         factor = GAK.getFactor();
         jlControlHourPanel = new JLabel("0 участий в ГАК, 0 часов");
-        jbPlusOne = new JButton("Добавить участие в ГАК");
+        JButton jbPlusOne = new JButton("Добавить участие в ГАК");
         jbPlusOne.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -31,7 +28,7 @@ public class GAKInputPanel extends JPanel implements ActivityInterface{
                 refresh();
             }
         });
-        jbClear = new JButton("Сбросить");
+        JButton jbClear = new JButton("Сбросить");
         jbClear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -39,7 +36,7 @@ public class GAKInputPanel extends JPanel implements ActivityInterface{
                 jlControlHourPanel.setText("0 участий в ГАК, 0 часов");
             }
         });
-        jbMinus = new JButton("Убрать одно участие в ГАК");
+        JButton jbMinus = new JButton("Убрать одно участие в ГАК");
         jbMinus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -60,7 +60,7 @@ public class Practice implements SettableActivity,TimeTableElement{
         return peoplesNum;
     }
 
-    public void setPeoplesNum(int peoplesNum) {
+    private void setPeoplesNum(int peoplesNum) {
         this.peoplesNum = peoplesNum;
     }
 
@@ -154,7 +154,7 @@ public class Practice implements SettableActivity,TimeTableElement{
 
     @Override
     public String getName() {
-        return ("Практика "+String.format("%.2g",(double)factor*peoplesNum)+" часов");
+        return ("Практика "+String.format("%.2g", factor *peoplesNum)+" часов");
     }
 
     @Override

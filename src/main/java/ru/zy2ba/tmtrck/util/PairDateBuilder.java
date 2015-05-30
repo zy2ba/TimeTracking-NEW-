@@ -27,7 +27,7 @@ public class PairDateBuilder implements Builder<PairDate> {
         this.pairDate = param;
         return this;
     }
-    public PairDateBuilder withHoliday(Boolean param){
+    public PairDateBuilder withHoliday(@SuppressWarnings("SameParameterValue") Boolean param){
         this.holiday = param;
         return this;
     }

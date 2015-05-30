@@ -8,7 +8,7 @@ package ru.zy2ba.tmtrck.util;
  * 
  * Generic builder which has abstract build method.
  */
-public interface Builder<T> {
+interface Builder<T> {
 
-    public T build() throws Exception;
+    T build() throws Exception;
 }

@@ -8,7 +8,6 @@ import ru.zy2ba.tmtrck.entity.*;
 import ru.zy2ba.tmtrck.manager.*;
 import ru.zy2ba.tmtrck.util.ResourceLocator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -80,8 +79,7 @@ public class PairManagerImpl implements PairManager {
         entity.setPrepod(prepodManager.create(entity.getPrepod()));
 
         if(!this.findPairDublicate(entity)){
-        Pair pair = pairDao.saveAndFlush(entity);
-        return pair;
+            return pairDao.saveAndFlush(entity);
         }else return null;
     }
 
@@ -108,9 +106,7 @@ public class PairManagerImpl implements PairManager {
     @Override
     public boolean findPairDublicate(Pair entity) {
        Pair persistPair = pairDao.findByGroup2AndPairDateAndPairNameAndPairNumAndPrepod( entity.getGroup2(), entity.getPairDate(), entity.getPairName(), entity.getPairNum(), entity.getPrepod());
-        if(persistPair!=null && persistPair.getId()>-1){
-            return true;
-        }else return false;
+        return persistPair != null && persistPair.getId() > -1;
     }
 
     @Override
@@ -128,9 +124,7 @@ public class PairManagerImpl implements PairManager {
 
     @Override
     public ArrayList<Pair> findCarriedPairsForPrepodByDate(Prepod prepod, PairDate pairDate) {
-        ArrayList<Pair> pairs = pairDao.findByPrepodAndPairDateAndIsCarriedOut(prepod,pairDate,true);
-
-        return pairs;
+        return pairDao.findByPrepodAndPairDateAndIsCarriedOut(prepod,pairDate,true);
     }
 
     /**
@@ -141,11 +135,10 @@ public class PairManagerImpl implements PairManager {
      * @param finishDate
      * @param isCarrieadOutStatus
      * @param isOnHolidayStatus
-     * @param separateVia
      * @return
      */
     @Override
-    public ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, LocalDate startDate, LocalDate finishDate, int isCarrieadOutStatus, int isOnHolidayStatus, int separateVia) {
+    public ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, LocalDate startDate, LocalDate finishDate, int isCarrieadOutStatus, int isOnHolidayStatus) {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         ArrayList<PairDate> dates = isOnHolidayStatus==0?pairDateManager.findByDate(startDate, finishDate.plusDays(1)):pairDateManager.findByDateAndHoliday(startDate,finishDate.plusDays(1),isOnHolidayStatus==1);
         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
@@ -180,11 +173,11 @@ public class PairManagerImpl implements PairManager {
     }
 
     @Override
-    public ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, int isCarrieadOutStatus, int isOnHolidayStatus, int separateVia) {
+    public ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, int isCarrieadOutStatus, int isOnHolidayStatus) {
         PrepodManager prepodManager = (PrepodManager) ResourceLocator.getBean("prepodManager");
         Prepod prepod =prepodManager.findByNameAndLastName(prepodName,prepodLastName);
         ArrayList<Pair> prepodPairs = isCarrieadOutStatus==0?pairDao.findByPrepod(prepod):pairDao.findByPrepodAndIsCarriedOut(prepod,isCarrieadOutStatus==1);
-        ArrayList<Pair> selectedPairs = new ArrayList();
+        ArrayList<Pair> selectedPairs = new ArrayList<>();
         if (isOnHolidayStatus!=0){
             for(Pair pair:prepodPairs){
                 if (pair.getPairDate().getHoliday()==(isOnHolidayStatus==1)){

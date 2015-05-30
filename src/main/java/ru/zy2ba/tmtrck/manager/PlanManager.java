@@ -9,5 +9,5 @@ import java.util.ArrayList;
  * Created by Zy2ba on 26.05.2015.
  */
 public interface PlanManager extends EntityManager<Plan> {
-public Plan getByPrepodAndStartYear(Prepod prepod, int startYear);
+Plan getByPrepodAndStartYear(Prepod prepod, int startYear);
 }

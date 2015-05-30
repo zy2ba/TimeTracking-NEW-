@@ -56,7 +56,7 @@ public class DiplomaProjectImpl implements DiplomaProjectManager,ActivityManager
     }
 
     @Override
-    public ArrayList getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
+    public ArrayList<DiplomaProject> getByPrepodAndDate(Prepod prepod, LocalDate startDate, LocalDate finishDate) {
         ArrayList<DiplomaProject> findDiplomaProjects = new ArrayList<>();
 
         for(LocalDate d= startDate; !d.equals(finishDate.plusDays(1));d=d.plusDays(1) ){

@@ -70,7 +70,7 @@ public class PairName {
      *                   а если false, то вернёт "лаб."
      * @return тип пары в виде текса
      */
-    public String getPairTypeToString(boolean longFormat){
+    public String getPairTypeToString(@SuppressWarnings("SameParameterValue") boolean longFormat){
         if(this.pairType==PairType.lab){
             return longFormat ? "лабораторная" : "лаб.";
         }

@@ -21,17 +21,12 @@ import java.util.Iterator;
 /**
  * Created by Zy2ba on 20.05.2015.
  */
-public class CustomReportUtil {
-    FileOutputStream fileOutputStream;
-    FileInputStream fileInputStream;
-    File file;
-    LocalDate startDate;
-    LocalDate finishDate;
-    String kafedra;
-    Iterator<Row> rowIterator;
-    Iterator<Cell> cellIterator;
-    Row row;
-    Cell cell;
+class CustomReportUtil {
+    private final File file;
+    private final LocalDate startDate;
+    private final LocalDate finishDate;
+    private final String kafedra;
+
     public CustomReportUtil(File filein, LocalDate dateStart, LocalDate dateFinish, String faculty){
         file = filein;
         this.startDate = dateStart;
@@ -45,12 +40,15 @@ public class CustomReportUtil {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         ArrayList<PairDate> pairDates = pairDateManager.findByDate(startDate,finishDate);
 
-        fileInputStream = new FileInputStream(file);
+        FileInputStream fileInputStream = new FileInputStream(file);
 
         Workbook wb = WorkbookFactory.create(fileInputStream);
         Sheet sh = wb.getSheet("ФБш");
         if(sh==null) throw new IOException();
-        rowIterator = sh.rowIterator();
+        Iterator<Row> rowIterator = sh.rowIterator();
+        Iterator<Cell> cellIterator;
+        Row row;
+        Cell cell;
         while (rowIterator.hasNext()){
             row = rowIterator.next();
             cellIterator = row.cellIterator();
@@ -105,42 +103,41 @@ public class CustomReportUtil {
                 cellIterator = row.cellIterator();
                 cellIterator.next();
                 cell = cellIterator.next();
-                cell.setCellValue(prepod.getLastName()+" "+prepod.getName()+" "+prepod.getMiddleName());
+                cell.setCellValue(prepod.getLastName() + " " + prepod.getName() + " " + prepod.getMiddleName());
                 cellIterator.next();
                 cellIterator.next();
                 cellIterator.next();
                 cellIterator.next();
                 cellIterator.next();
                 cell = cellIterator.next();
-                cell.setCellValue(lectionHours>0.1?String.format("%.2g",(double)lectionHours):" ");
+                cell.setCellValue(lectionHours > 0.1 ? String.format("%.2g", (double) lectionHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(labHours>0.1?String.format("%.2g",(double)labHours):" ");
+                cell.setCellValue(labHours > 0.1 ? String.format("%.2g", (double) labHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(practiceHours>0.1?String.format("%.2g",(double)practiceHours):" ");
+                cell.setCellValue(practiceHours > 0.1 ? String.format("%.2g", (double) practiceHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(consultsHours>0.1?String.format("%.2g",(double)consultsHours):" ");
+                cell.setCellValue(consultsHours > 0.1 ? String.format("%.2g", (double) consultsHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(examsHours>0.1?String.format("%.2g",(double)examsHours):" ");
+                cell.setCellValue(examsHours > 0.1 ? String.format("%.2g", (double) examsHours) : " ");
                 cell = cellIterator.next();
                 cell.setCellValue(" ");
                 cell = cellIterator.next();
                 cell.setCellValue(" ");
                 cell = cellIterator.next();
-                cell.setCellValue(kursRabsHours>0.1?String.format("%.2g",(double)kursRabsHours):" ");
+                cell.setCellValue(kursRabsHours > 0.1 ? String.format("%.2g", (double) kursRabsHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(kursProjectsHours>0.1?String.format("%.2g",(double)kursProjectsHours):" ");
+                cell.setCellValue(kursProjectsHours > 0.1 ? String.format("%.2g", (double) kursProjectsHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(diplomasHours>0.1?String.format("%.2g",(double)diplomasHours):" ");
+                cell.setCellValue(diplomasHours > 0.1 ? String.format("%.2g", (double) diplomasHours) : " ");
                 cell = cellIterator.next();
                 cell.setCellValue(" ");
                 cell = cellIterator.next();
-                cell.setCellValue(practiceHours>0.1?String.format("%.2g",(double)practiceHours):(" "));
+                cell.setCellValue(practiceHours > 0.1 ? String.format("%.2g", (double) practiceHours) : (" "));
             }
         }
 
 
-
-        fileOutputStream = new FileOutputStream(file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-5)+"_returned.xlsm");
+        FileOutputStream fileOutputStream = new FileOutputStream(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 5) + "_returned.xlsm");
         wb.write(fileOutputStream);
         fileOutputStream.close();
         fileInputStream.close();

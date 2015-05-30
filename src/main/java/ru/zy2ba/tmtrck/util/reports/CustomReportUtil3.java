@@ -24,21 +24,14 @@ import java.util.Iterator;
  * Created by Zy2ba on 29.05.2015.
  */
 public class CustomReportUtil3 {
-    FileOutputStream fileOutputStream;
-    FileInputStream fileInputStream;
-    File file;
-    LocalDate startDate;
-    LocalDate finishDate;
-    String kafedra;
-    Iterator<Row> rowIterator;
-    Iterator<Cell> cellIterator;
-    Iterator<Cell> cellIterator2;
-    Row row;
-    Row row2;
-    Cell cell;
-    Cell cell2;
-    int startYear;
-    AutumnSpringSpacer autumnSpringSpacer;
+    private final File file;
+    private final LocalDate startDate;
+    private final LocalDate finishDate;
+    private final String kafedra;
+    private Iterator<Cell> cellIterator2;
+    private Row row2;
+    private Cell cell2;
+    private int startYear;
     private Iterator<Row> rowIterator2;
 
     public CustomReportUtil3(File filein, LocalDate dateStart, LocalDate dateFinish, String faculty) {
@@ -50,7 +43,7 @@ public class CustomReportUtil3 {
 
     public void makeReport() throws IOException, InvalidFormatException, WrongDatesException {
         AutumnSpringSpacerManager autumnSpringSpacerManager = (AutumnSpringSpacerManager) ResourceLocator.getBean("autumnSpringSpacerManager");
-        autumnSpringSpacer = autumnSpringSpacerManager.getSpacerForDate(startDate);
+        AutumnSpringSpacer autumnSpringSpacer = autumnSpringSpacerManager.getSpacerForDate(startDate);
         AutumnSpringSpacer autumnSpringSpacer2 = autumnSpringSpacerManager.getSpacerForDate(finishDate);
         if(autumnSpringSpacer.getStartYear()!=autumnSpringSpacer2.getStartYear())throw new WrongDatesException();
 
@@ -59,12 +52,15 @@ public class CustomReportUtil3 {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         ArrayList<PairDate> pairDates = pairDateManager.findByDate(startDate, finishDate);
 
-        fileInputStream = new FileInputStream(file);
+        FileInputStream fileInputStream = new FileInputStream(file);
 
         Workbook wb = WorkbookFactory.create(fileInputStream);
         Sheet sh = wb.getSheet("ФБш");
         if (sh == null) throw new IOException();
-        rowIterator = sh.rowIterator();
+        Iterator<Row> rowIterator = sh.rowIterator();
+        Iterator<Cell> cellIterator;
+        Row row;
+        Cell cell;
         while (rowIterator.hasNext()) {
             row = rowIterator.next();
             cellIterator = row.cellIterator();
@@ -88,7 +84,7 @@ public class CustomReportUtil3 {
         PlanManager planManager = (PlanManager) ResourceLocator.getBean("planManager");
         PairManager pairManager = (PairManager) ResourceLocator.getBean("pairManager");
         for (Prepod prepod : prepods) {
-            Plan plan = planManager.getByPrepodAndStartYear(prepod,autumnSpringSpacer.getStartYear());
+            Plan plan = planManager.getByPrepodAndStartYear(prepod, autumnSpringSpacer.getStartYear());
             if (plan!=null)
         {
 
@@ -252,8 +248,8 @@ public class CustomReportUtil3 {
                 if(plan.getRang()!=null){
                     cell.setCellValue(plan.getRangString());
                 }
-                cell =cellIterator.next();
-                cell.setCellValue(String.format("%.2g",(double)plan.getRate()));
+                cell = cellIterator.next();
+                cell.setCellValue(String.format("%.2g", (double) plan.getRate()));
                 cell = cellIterator.next();
                 cell.setCellValue(lectionHours > 0.1 ? String.format("%.2g", (double) lectionHours) : " ");
                 cell = cellIterator.next();
@@ -266,7 +262,7 @@ public class CustomReportUtil3 {
                 cell = cellIterator.next();
                 cell.setCellValue(examsHours > 0.1 ? String.format("%.2g", (double) examsHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(zachetsHours > 0.1 ? String.format("%.2g",(double)zachetsHours): " ");
+                cell.setCellValue(zachetsHours > 0.1 ? String.format("%.2g", (double) zachetsHours) : " ");
                 cell = cellIterator.next();
                 cell.setCellValue(" ");
                 cell = cellIterator.next();
@@ -276,7 +272,7 @@ public class CustomReportUtil3 {
                 cell = cellIterator.next();
                 cell.setCellValue(diplomasHours > 0.1 ? String.format("%.2g", (double) diplomasHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(gakHours > 0.1 ? String.format("%.2g",(double)gakHours): " ");
+                cell.setCellValue(gakHours > 0.1 ? String.format("%.2g", (double) gakHours) : " ");
                 cell = cellIterator.next();
                 cell.setCellValue(practicesHours > 0.1 ? String.format("%.2g", (double) practicesHours) : (" "));
 
@@ -332,7 +328,7 @@ public class CustomReportUtil3 {
             }
         }
         }
-        fileOutputStream = new FileOutputStream(file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-5)+"_returned.xlsm");
+        FileOutputStream fileOutputStream = new FileOutputStream(file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 5) + "_returned.xlsm");
         wb.write(fileOutputStream);
         fileOutputStream.close();
         fileInputStream.close();

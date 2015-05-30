@@ -183,8 +183,7 @@ public class Pair implements TimeTableElement{
 
     @Override
     public String getLocation() {
-        String location = this.getClassroom().getBuilding()+"-"+this.getClassroom().getNum();
-        return location;
+        return this.getClassroom().getBuilding()+"-"+ this.getClassroom().getNum();
     }
 
     @Override

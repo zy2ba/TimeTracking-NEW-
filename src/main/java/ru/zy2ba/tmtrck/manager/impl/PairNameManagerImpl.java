@@ -30,8 +30,7 @@ PairNameDao pairNameDao;
             return persistPairName;
             //entity.setId(persistPairName.getId());
         }
-        PairName pairName = pairNameDao.saveAndFlush(entity);
-        return pairName;
+        return pairNameDao.saveAndFlush(entity);
     }
 
     @Override
