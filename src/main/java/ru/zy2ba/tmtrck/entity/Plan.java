@@ -142,7 +142,7 @@ public class Plan {
             case DOCENT: return "доцент";
             case SENIOR_PREPOD: return  "ст. преподаватель";
             case HEAD_OF_DEPARTMENT_NONPRODUCING:return "зав. кафедрой(не выпускающей)";
-            case HEAD_OF_DEPARTMENT_PHYSICAL_EDUCATION:return "зав. кафедрой физ. фоспитания";
+            case HEAD_OF_DEPARTMENT_PHYSICAL_EDUCATION:return "зав. кафедрой физ. воспитания";
             case HEAD_OF_DEPARTMENT_PRODUCING:return "зав. кафедрой (выпускающей)";
             case PED_WORK:return "пед.работа";
             case PROFESSOR:return "профессор";
