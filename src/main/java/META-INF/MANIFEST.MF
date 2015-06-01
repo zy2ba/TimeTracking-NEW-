@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: spring/applicationContext.xml main/resources/spring /src/m
+ ain/resources/spring main/resources/spring/applicationContext.xml /sr
+ c/main/resources/spring/applicationContext.xml
+Main-Class: ru.zy2ba.tmtrck.form.MainForm
+

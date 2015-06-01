@@ -64,4 +64,5 @@ public interface PairDao extends JpaRepository<Pair,Long>{
      */
     ArrayList<Pair> findByPrepodAndIsCarriedOut(Prepod prepod, boolean isCarriedOut);
 
+    ArrayList<Pair> findByPairDate(PairDate pairDate);
 }

@@ -203,4 +203,16 @@ public class PairManagerImpl implements PairManager {
         }
         return selectedPairs;
     }
+
+    @Override
+    public void delForDate(LocalDate startDate, LocalDate finishDate) {
+        PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
+        ArrayList<PairDate> pairDates = pairDateManager.findByDate(startDate,finishDate);
+        for(PairDate pairDate:pairDates){
+            ArrayList<Pair> pairs = pairDao.findByPairDate(pairDate);
+            for(Pair pair:pairs){
+                pairDao.delete(pair);
+            }
+        }
+    }
 }

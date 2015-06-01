@@ -18,4 +18,5 @@ public interface PairManager extends EntityManager<Pair> {
     ArrayList<Pair> findCarriedPairsForPrepodByDate(Prepod prepod,PairDate pairDate);
     ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, LocalDate startDate, LocalDate finishDate, int isCarrieadOutStatus, int isOnHolidayStatus);
     ArrayList<Pair> searchCustom(String prepodName, String prepodLastName, int isCarrieadOutStatus, int isOnHolidayStatus);
+    void delForDate(LocalDate starDate,LocalDate finishDate);
 }
