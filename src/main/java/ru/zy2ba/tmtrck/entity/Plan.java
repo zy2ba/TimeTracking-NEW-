@@ -72,8 +72,8 @@ public class Plan {
     @Column(name = "budgetHourly")
     private double budgetHourly;
 
-    @Column(name = "plantoRegular")
-    private double plantoRegular;
+    @Column(name = "platnoRegular")
+    private double platnoRegular;
 
     @Column(name = "plantoHourly")
     private double plantoHourly;
@@ -218,12 +218,12 @@ public class Plan {
         this.budgetHourly = budgetHourly;
     }
 
-    public double getPlantoRegular() {
-        return plantoRegular;
+    public double getPlatnoRegular() {
+        return platnoRegular;
     }
 
-    public void setPlantoRegular(double plantoRegular) {
-        this.plantoRegular = plantoRegular;
+    public void setPlatnoRegular(double platnoRegular) {
+        this.platnoRegular = platnoRegular;
     }
 
     public double getPlantoHourly() {

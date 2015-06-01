@@ -330,7 +330,7 @@ public class PlanParser {
                         cells.next();
                         cells.next();
                         cell = cells.next();
-                        makeablePlan.setPlantoRegular(cell.getNumericCellValue());
+                        makeablePlan.setPlatnoRegular(cell.getNumericCellValue());
                         cells.next();
                         cells.next();
                         cell = cells.next();

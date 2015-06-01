@@ -2,6 +2,7 @@ package ru.zy2ba.tmtrck.manager.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
+import org.springframework.orm.hibernate3.HibernateSystemException;
 import ru.zy2ba.tmtrck.dao.PlanDao;
 import ru.zy2ba.tmtrck.entity.Plan;
 import ru.zy2ba.tmtrck.entity.Prepod;
@@ -23,22 +24,28 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public Plan create(Plan entity) throws HibernateJdbcException {
-        Plan persistPlans = planDao.findByPrepodAndStartYear(entity.getPrepod(), entity.getStartYear());
-        if(persistPlans!=null && persistPlans.getId()>-1){
-            entity.setId(persistPlans.getId());
-            entity.getPlanTableAutumnBudget().setId(persistPlans.getPlanTableAutumnBudget().getId());
-            entity.getPlanTableSpringBudget().setId(persistPlans.getPlanTableSpringBudget().getId());
-            entity.getPlanTableAutumnPlatno().setId(persistPlans.getPlanTableAutumnPlatno().getId());
-            entity.getPlanTableSpringPlatno().setId(persistPlans.getPlanTableSpringPlatno().getId());
-            entity.getPlanTableAutumnShort().setId(persistPlans.getPlanTableAutumnShort().getId());
-            entity.getPlanTableSpringShort().setId(persistPlans.getPlanTableSpringShort().getId());
-            return planDao.saveAndFlush(entity);
+        try{
+            Plan persistPlans = planDao.findByPrepodAndStartYear(entity.getPrepod(), entity.getStartYear());
+            if(persistPlans!=null && persistPlans.getId()>-1){
+                entity.setId(persistPlans.getId());
+                entity.getPlanTableAutumnBudget().setId(persistPlans.getPlanTableAutumnBudget().getId());
+                entity.getPlanTableSpringBudget().setId(persistPlans.getPlanTableSpringBudget().getId());
+                entity.getPlanTableAutumnPlatno().setId(persistPlans.getPlanTableAutumnPlatno().getId());
+                entity.getPlanTableSpringPlatno().setId(persistPlans.getPlanTableSpringPlatno().getId());
+                entity.getPlanTableAutumnShort().setId(persistPlans.getPlanTableAutumnShort().getId());
+                entity.getPlanTableSpringShort().setId(persistPlans.getPlanTableSpringShort().getId());
+                return planDao.saveAndFlush(entity);
+            }
+            PlanTableManager planTableManager = (PlanTableManager) ResourceLocator.getBean("planTableManager");
+            // entity.setPlanTableAutumnBudget(planTableManager.create(entity.getPlanTableAutumnBudget()));
+            // entity.setPlanTableSpringBudget(planTableManager.create(entity.getPlanTableSpringBudget()));
+            entity = planDao.saveAndFlush(entity);
+            return entity;
+        }catch (HibernateSystemException e){
+            PlanTableManager planTableManager = (PlanTableManager) ResourceLocator.getBean("planTableManager");
+            entity = planDao.saveAndFlush(entity);
+            return entity;
         }
-        PlanTableManager planTableManager = (PlanTableManager) ResourceLocator.getBean("planTableManager");
-       // entity.setPlanTableAutumnBudget(planTableManager.create(entity.getPlanTableAutumnBudget()));
-       // entity.setPlanTableSpringBudget(planTableManager.create(entity.getPlanTableSpringBudget()));
-        entity = planDao.saveAndFlush(entity);
-        return entity;
     }
 
     @Override
