@@ -199,7 +199,7 @@ public class PairManagerImpl implements PairManager {
         });
         StringBuilder stringBuilder = new StringBuilder();
         for(Pair pair:selectedPairs){
-                stringBuilder.append(pair.getPairDate().getDate().toString() +","+pair.getPairDate().getDateToString() + "|№"+(pair.getPairNum().getNum()+1)+ "|" + pair.getPairNum().getTime() + "|" + pair.getClassroom().getBuilding() + "-" + pair.getClassroom().getNum() + " " + pair.getGroup2().getName() + " " + pair.getPairName().getName() + "(" + pair.getStringIsCarriedOut(true) +  ")" + "\r\n");
+                stringBuilder.append(pair.getPairDate().getDate().toString()).append(",").append(pair.getPairDate().getDateToString()).append("|№").append(pair.getPairNum().getNum() + 1).append("|").append(pair.getPairNum().getTime()).append("|").append(pair.getClassroom().getBuilding()).append("-").append(pair.getClassroom().getNum()).append(" ").append(pair.getGroup2().getName()).append(" ").append(pair.getPairName().getName()).append("(").append(pair.getStringIsCarriedOut(true)).append(")").append("\r\n");
         }
         return selectedPairs;
     }

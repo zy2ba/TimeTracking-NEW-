@@ -1,12 +1,8 @@
 package ru.zy2ba.tmtrck.util.reports;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import ru.zy2ba.tmtrck.entity.ActivityTypes.KursRab;
 import ru.zy2ba.tmtrck.entity.Pair;
 import ru.zy2ba.tmtrck.entity.PairDate;
 import ru.zy2ba.tmtrck.entity.Prepod;
@@ -19,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by Zy2ba on 20.05.2015.
+ * @author Zy2ba
+ * @since 20.05.2015
  */
 class CustomReportUtil {
     private final File file;

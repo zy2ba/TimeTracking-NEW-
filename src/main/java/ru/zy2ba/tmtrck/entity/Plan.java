@@ -2,7 +2,6 @@ package ru.zy2ba.tmtrck.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 import ru.zy2ba.tmtrck.entity.enums.PrepodRang;
-import ru.zy2ba.tmtrck.entity.enums.TypeOfLoad;
 
 import javax.persistence.*;
 

@@ -21,7 +21,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * Created by Zy2ba on 29.05.2015.
+ * @author Zy2ba
+ * @since 29.05.2015
  */
 public class CustomReportUtil3 {
     private final File file;
@@ -251,30 +252,30 @@ public class CustomReportUtil3 {
                 cell = cellIterator.next();
                 cell.setCellValue(String.format("%.2g", (double) plan.getRate()));
                 cell = cellIterator.next();
-                cell.setCellValue(lectionHours > 0.1 ? String.format("%.2g", (double) lectionHours) : " ");
+                cell.setCellValue(lectionHours > 0.1 ? String.format("%.2g", (double) lectionHours) : "");
                 cell = cellIterator.next();
 
-                cell.setCellValue(labHours > 0.1 ? String.format("%.2g", (double) labHours) : " ");
+                cell.setCellValue(labHours > 0.1 ? String.format("%.2g", (double) labHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(practiceHours > 0.1 ? String.format("%.2g", (double) practiceHours) : " ");
+                cell.setCellValue(practiceHours > 0.1 ? String.format("%.2g", (double) practiceHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(consultsHours > 0.1 ? String.format("%.2g", (double) consultsHours) : " ");
+                cell.setCellValue(consultsHours > 0.1 ? String.format("%.2g", (double) consultsHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(examsHours > 0.1 ? String.format("%.2g", (double) examsHours) : " ");
+                cell.setCellValue(examsHours > 0.1 ? String.format("%.2g", (double) examsHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(zachetsHours > 0.1 ? String.format("%.2g", (double) zachetsHours) : " ");
+                cell.setCellValue(zachetsHours > 0.1 ? String.format("%.2g", (double) zachetsHours) : "");
                 cell = cellIterator.next();
                 cell.setCellValue(" ");
                 cell = cellIterator.next();
-                cell.setCellValue(kursRabsHours > 0.1 ? String.format("%.2g", (double) kursRabsHours) : " ");
+                cell.setCellValue(kursRabsHours > 0.1 ? String.format("%.2g", (double) kursRabsHours) : "");
                 cell = cellIterator.next();
                 cell.setCellValue(kursProjectsHours > 0.1 ? String.format("%.2g", (double) kursProjectsHours) : " ");
                 cell = cellIterator.next();
-                cell.setCellValue(diplomasHours > 0.1 ? String.format("%.2g", (double) diplomasHours) : " ");
+                cell.setCellValue(diplomasHours > 0.1 ? String.format("%.2g", (double) diplomasHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(gakHours > 0.1 ? String.format("%.2g", (double) gakHours) : " ");
+                cell.setCellValue(gakHours > 0.1 ? String.format("%.2g", (double) gakHours) : "");
                 cell = cellIterator.next();
-                cell.setCellValue(practicesHours > 0.1 ? String.format("%.2g", (double) practicesHours) : (" "));
+                cell.setCellValue(practicesHours > 0.1 ? String.format("%.2g", (double) practicesHours) : (""));
 
 
                /* Sheet sh2 = wb.getSheet("ФБп");

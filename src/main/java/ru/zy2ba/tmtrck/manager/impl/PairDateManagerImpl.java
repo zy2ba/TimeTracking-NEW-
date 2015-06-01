@@ -4,7 +4,6 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import ru.zy2ba.tmtrck.dao.PairDateDao;
-import ru.zy2ba.tmtrck.entity.Pair;
 import ru.zy2ba.tmtrck.entity.PairDate;
 import ru.zy2ba.tmtrck.manager.PairDateManager;
 

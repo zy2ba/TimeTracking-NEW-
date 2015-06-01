@@ -8,7 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by Zy2ba on 22.05.2015.
+ * @author Zy2ba
+ * @since 22.05.2015
  */
 public class ConsultationInputPanel extends JPanel implements ActivityInterface{
     private final JLabel jlControlHourPanel;

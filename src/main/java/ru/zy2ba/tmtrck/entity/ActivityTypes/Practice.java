@@ -3,7 +3,6 @@ package ru.zy2ba.tmtrck.entity.ActivityTypes;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import ru.zy2ba.tmtrck.entity.Pair;
 import ru.zy2ba.tmtrck.entity.PairDate;
 import ru.zy2ba.tmtrck.entity.Prepod;
 import ru.zy2ba.tmtrck.entity.TimeTableElement;
@@ -171,7 +170,10 @@ public class Practice implements SettableActivity,TimeTableElement{
     public boolean getIsOnHoliday() {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         PairDate pairDate = pairDateManager.findByDate(date);
-        if (pairDate==null) return false;
-        return (pairDateManager.findByDate(date)).getHoliday();
+        return pairDate != null && (pairDateManager.findByDate(date)).getHoliday();
+    }
+
+    public String getNameOfClass(){
+        return "Практика";
     }
 }

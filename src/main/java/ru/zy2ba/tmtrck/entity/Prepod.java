@@ -1,7 +1,6 @@
 package ru.zy2ba.tmtrck.entity;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import ru.zy2ba.tmtrck.entity.enums.PrepodRang;
 

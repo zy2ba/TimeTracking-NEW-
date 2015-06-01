@@ -14,7 +14,8 @@ import ru.zy2ba.tmtrck.manager.DiplomaProjectManager;
 import java.util.ArrayList;
 
 /**
- * Created by Zy2ba on 21.05.2015.
+ * @author Zy2ba
+ * @since 21.05.2015
  */
 public class DiplomaProjectImpl implements DiplomaProjectManager,ActivityManager<DiplomaProject> {
 

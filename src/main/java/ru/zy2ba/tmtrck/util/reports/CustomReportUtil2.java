@@ -21,7 +21,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * Created by Zy2ba on 29.05.2015.
+ * @author Zy2ba
+ * @since 29.05.2015
  */
 class CustomReportUtil2 {
     private FileOutputStream fileOutputStream;

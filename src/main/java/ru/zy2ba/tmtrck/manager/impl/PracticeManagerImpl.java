@@ -5,7 +5,6 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import ru.zy2ba.tmtrck.dao.PracticeDao;
-import ru.zy2ba.tmtrck.entity.ActivityTypes.DiplomaProject;
 import ru.zy2ba.tmtrck.entity.ActivityTypes.Practice;
 import ru.zy2ba.tmtrck.entity.Prepod;
 import ru.zy2ba.tmtrck.entity.enums.TypeOfLoad;

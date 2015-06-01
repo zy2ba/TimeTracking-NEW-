@@ -5,7 +5,6 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import ru.zy2ba.tmtrck.dao.ExamDao;
-import ru.zy2ba.tmtrck.entity.ActivityTypes.DiplomaProject;
 import ru.zy2ba.tmtrck.entity.ActivityTypes.Exam;
 import ru.zy2ba.tmtrck.entity.Prepod;
 import ru.zy2ba.tmtrck.entity.enums.TypeOfLoad;
@@ -15,7 +14,8 @@ import ru.zy2ba.tmtrck.manager.ExamManager;
 import java.util.ArrayList;
 
 /**
- * Created by Zy2ba on 21.05.2015.
+ * @author Zy2ba
+ * @since 21.05.2015
  */
 public class ExamManagerImpl implements ExamManager,ActivityManager<Exam> {
     @Autowired

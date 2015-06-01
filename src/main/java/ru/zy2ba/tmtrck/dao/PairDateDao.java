@@ -1,7 +1,6 @@
 package ru.zy2ba.tmtrck.dao;
 
 import org.joda.time.LocalDate;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.zy2ba.tmtrck.entity.PairDate;
 

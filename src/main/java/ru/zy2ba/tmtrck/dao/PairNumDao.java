@@ -1,12 +1,8 @@
 package ru.zy2ba.tmtrck.dao;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import ru.zy2ba.tmtrck.entity.PairNum;
 import ru.zy2ba.tmtrck.entity.enums.Week;
-
-import java.util.List;
 
 /**
  * Обеспечивает работу с сущностью номер пары

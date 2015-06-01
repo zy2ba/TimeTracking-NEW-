@@ -13,5 +13,6 @@ public interface SettableActivity<T> {
     void setDate(LocalDate date) ;
     void setTypeOfLoad(TypeOfLoad typeOfLoad);
     double getHours();
+    //public String getNameOfClass();
     TypeOfLoad getTypeOfLoad();
 }

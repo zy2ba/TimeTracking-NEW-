@@ -9,7 +9,8 @@ import ru.zy2ba.tmtrck.entity.enums.TypeOfLoad;
 import java.util.ArrayList;
 
 /**
- * Created by Zy2ba on 29.05.2015.
+ * @author Zy2ba
+ * @since 29.05.2015
  */
 public interface GAKDao extends JpaRepository<GAK,Long> {
     ArrayList<GAK> findByPrepod(Prepod prepod);

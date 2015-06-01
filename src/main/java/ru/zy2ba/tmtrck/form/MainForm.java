@@ -3,6 +3,8 @@ package ru.zy2ba.tmtrck.form;
 import com.toedter.calendar.JDateChooser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import ru.zy2ba.tmtrck.entity.*;
 import ru.zy2ba.tmtrck.entity.ActivityTypes.*;
@@ -12,6 +14,7 @@ import ru.zy2ba.tmtrck.exception.OutOfHoursException;
 import ru.zy2ba.tmtrck.exception.TranstortAcrossSemesterException;
 import ru.zy2ba.tmtrck.exception.WrongDatesException;
 import ru.zy2ba.tmtrck.manager.*;
+import ru.zy2ba.tmtrck.util.PairDateBuilder;
 import ru.zy2ba.tmtrck.util.Parser;
 import ru.zy2ba.tmtrck.util.PlanParser;
 import ru.zy2ba.tmtrck.util.ResourceLocator;
@@ -135,7 +138,7 @@ class MainForm {
             "Шестая",
             "Седьмая"
     };
-    private final String[] vcbYears = {
+   /* private final String[] vcbYears = {
             "2010/11",
             "2011/12",
             "2012/13",
@@ -145,7 +148,7 @@ class MainForm {
             "2016/17",
             "2017/18",
             "2018/19"
-    };
+    };*/
     private ArrayList<TimeTableElement> timeTableElements;
     private LocalDate ldCOFO;
     private PlanTable planTable;
@@ -473,20 +476,44 @@ class MainForm {
         jbAASSSetTransportDate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LocalDate spacerDate = new LocalDate(jdcAASSDate.getDate()).plusDays(0);
                 AutumnSpringSpacerManager autumnSpringSpacerManager = (AutumnSpringSpacerManager) ResourceLocator.getBean("autumnSpringSpacerManager");
-                AutumnSpringSpacer autumnSpringSpacer = new AutumnSpringSpacer();
-                autumnSpringSpacer.setSpacerDate(new LocalDate(jdcAASSDate.getDate()).plusDays(1));
-                int lastAugustDateNumber;
-                int year = autumnSpringSpacer.getSpacerDate().getYear();
-                if ((year%4==0&& year%100!=0)||(year%400==0) ){
-                    lastAugustDateNumber = 244;
-                } else lastAugustDateNumber = 243;
+                AutumnSpringSpacer autumnSpringSpacer = autumnSpringSpacerManager.getSpacerForDate(spacerDate);
+                if(autumnSpringSpacer==null){
+                    autumnSpringSpacer= new AutumnSpringSpacer();
+                    autumnSpringSpacer.setSpacerDate(spacerDate);
+                    int lastAugustDateNumber;
+                    int year = autumnSpringSpacer.getSpacerDate().getYear();
+                    if ((year%4==0&& year%100!=0)||(year%400==0) ){
+                        lastAugustDateNumber = 244;
+                    } else lastAugustDateNumber = 243;
 
-                if (autumnSpringSpacer.getSpacerDate().getDayOfYear()>lastAugustDateNumber){
-                    autumnSpringSpacer.setStartYear(year);
-                }else autumnSpringSpacer.setStartYear(--year);
-                autumnSpringSpacerManager.create(autumnSpringSpacer);            }
-        });
+                    if (autumnSpringSpacer.getSpacerDate().getDayOfYear()>lastAugustDateNumber){
+                        autumnSpringSpacer.setStartYear(year);
+                    }else autumnSpringSpacer.setStartYear(--year);
+                    autumnSpringSpacerManager.create(autumnSpringSpacer);
+                } else if(!autumnSpringSpacer.getSpacerDate().equals(spacerDate)) {
+                    int res = JOptionPane.showConfirmDialog(jfrm,"Для данного учебного года уже выбрана дата перехода, это "+autumnSpringSpacer.getSpacerDate().toString(DateTimeFormat.mediumDate().withLocale(new Locale("ru")))+". Заменить её на "+spacerDate.toString(DateTimeFormat.mediumDate().withLocale(new Locale("ru")))+"?","Подтвердите ввод",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+                    if (res== JOptionPane.OK_OPTION){
+                        autumnSpringSpacer= new AutumnSpringSpacer();
+
+                        autumnSpringSpacer.setSpacerDate(spacerDate);
+                        int lastAugustDateNumber;
+                        int year = autumnSpringSpacer.getSpacerDate().getYear();
+                        if ((year%4==0&& year%100!=0)||(year%400==0) ){
+                            lastAugustDateNumber = 244;
+                        } else lastAugustDateNumber = 243;
+
+                        if (autumnSpringSpacer.getSpacerDate().getDayOfYear()>lastAugustDateNumber){
+                            autumnSpringSpacer.setStartYear(year);
+                        }else autumnSpringSpacer.setStartYear(--year);
+                        autumnSpringSpacerManager.create(autumnSpringSpacer);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(jfrm,"Для данного учебного года " + spacerDate.toString(DateTimeFormat.mediumDate().withLocale(new Locale("ru"))) + " уже выбрана в качестве переходной.", "Инфорация к ознакомлению:",JOptionPane.INFORMATION_MESSAGE);
+                }
+        }});
 
         jpAddAutumnSpringSpacer.add(jdcAASSDate);
         jpAddAutumnSpringSpacer.add(jbAASSSetTransportDate);
@@ -665,210 +692,255 @@ class MainForm {
                         break;
                     default:   ip = new ActivityInputPanel(2);
                 }
-                int res = JOptionPane.showConfirmDialog(null, ip, "Введите количество",
+
+                int res = JOptionPane.showConfirmDialog(jfrm, ip, "Введите количество",
                         JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
-
-                EntityManager entityManager;
-                SettableActivity activity =null;
-                switch (jcbCOForActivites.getSelectedIndex()){
-                    case 0:
-                        activity = new Consult();
-                        entityManager = (ConsultManager) ResourceLocator.getBean("consultManager");
-                        break;
-                    case 1:
-                        activity = new Exam();
-                        entityManager = (ExamManager) ResourceLocator.getBean("examManager");
-                        break;
-                    case 2:
-                        activity = new KursProject();
-                        entityManager = (KursProjectManager) ResourceLocator.getBean("kursProjectManager");
-                        break;
-                    case 3:
-                        activity = new KursRab();
-                        entityManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
-                        break;
-                    case 4:
-                        activity = new DiplomaProject();
-                        entityManager = (DiplomaProjectManager) ResourceLocator.getBean("diplomaProjectManager");
-                        break;
-                    case 5:
-                        activity = new Practice();
-                        entityManager = (PracticeManager) ResourceLocator.getBean("practiceManager");
-                        break;
-                    case 6:
-                        activity = new Zachet();
-                        entityManager = (ZachetManager) ResourceLocator.getBean("zachetManager");
-                        break;
-                    case 7:
-                        activity = new GAK();
-                        entityManager = (GAKManager) ResourceLocator.getBean("GAKManager");
-                        break;
-                    default:
-                        activity = new Exam();
-                        entityManager = (ExamManager) ResourceLocator.getBean("examManager");
-                        break;
-                }
-                activity.setNum(ip.getNumberOf());
-                activity.setPrepod(userAccount);
-                activity.setDate(new LocalDate(jdcCOForActivites.getDate()).plusDays(1));
-                switch (jcbCOFATypeOfLoad.getSelectedIndex()){
-                    case 0:activity.setTypeOfLoad(TypeOfLoad.BUDGET); break;
-                    case 1:activity.setTypeOfLoad(TypeOfLoad.OFF_BUDGET); break;
-                    case 2:activity.setTypeOfLoad(TypeOfLoad.SHORT);break;
-                    default:activity.setTypeOfLoad(TypeOfLoad.BUDGET); break;
-                }
-                PlanManager planManager = (PlanManager) ResourceLocator.getBean("planManager");
-                Plan plan = planManager.getByPrepodAndStartYear(userAccount,autumnSpringSpacer.getStartYear());
-                LocalDate startSearchDate = new LocalDate();
-                if(plan==null) throw new IOException();
-
-                startSearchDate.withYear(autumnSpringSpacer.getStartYear());
-                if ((startSearchDate.getYear()%4==0&& startSearchDate.getYear()%100!=0)||(startSearchDate.getYear()%400==0) ){
-                    startSearchDate.withDayOfYear(244);
-                } else startSearchDate.withDayOfYear(243);
-                startSearchDate.withDayOfYear(243);
-                if(autumnSpringSpacer.getSpacerDate().isAfter(ldCOFO)){
-                /*
-                    KursRabManager kursRabManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
-
-                    ArrayList<Exam> exams = examManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
-                    ArrayList<Consult> consults = consultManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
-                    ArrayList<DiplomaProject> diplomaProjects = diplomaProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
-                    ArrayList<KursProject> kursProjects = kursProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
-                    ArrayList<KursRab> kursRabs = kursRabManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
-                    ArrayList<Practice> practices = practiceManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());*/
-                    switch (activity.getTypeOfLoad()) {
-                        case BUDGET:
-                            planTable = plan.getPlanTableAutumnBudget();
-                            /*
-                            PairManager pairManager = (PairManager) ResourceLocator.getBean("pairManager");
-
-                            ArrayList<Pair> pairs = pairManager.searchCustom(userAccount.getName(),userAccount.getLastName(),startSearchDate,autumnSpringSpacer.getSpacerDate(),1,2,0);
-                            if ((pairs.size()+exams.size()+consults.size()+diplomaProjects.size()+kursProjects.size()+kursRabs.size()+practices.size())>plan.getBudgetHourly()) throw new OutOfHoursException();*/
+                if(res == JOptionPane.OK_OPTION){
+                    EntityManager entityManager;
+                    SettableActivity activity =null;
+                    switch (jcbCOForActivites.getSelectedIndex()){
+                        case 0:
+                            activity = new Consult();
+                            entityManager = (ConsultManager) ResourceLocator.getBean("consultManager");
                             break;
-                        case OFF_BUDGET:
-                            planTable = plan.getPlanTableAutumnPlatno();
+                        case 1:
+                            activity = new Exam();
+                            entityManager = (ExamManager) ResourceLocator.getBean("examManager");
                             break;
-                        case SHORT:
-                            planTable = plan.getPlanTableAutumnShort();
+                        case 2:
+                            activity = new KursProject();
+                            entityManager = (KursProjectManager) ResourceLocator.getBean("kursProjectManager");
+                            break;
+                        case 3:
+                            activity = new KursRab();
+                            entityManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
+                            break;
+                        case 4:
+                            activity = new DiplomaProject();
+                            entityManager = (DiplomaProjectManager) ResourceLocator.getBean("diplomaProjectManager");
+                            break;
+                        case 5:
+                            activity = new Practice();
+                            entityManager = (PracticeManager) ResourceLocator.getBean("practiceManager");
+                            break;
+                        case 6:
+                            activity = new Zachet();
+                            entityManager = (ZachetManager) ResourceLocator.getBean("zachetManager");
+                            break;
+                        case 7:
+                            activity = new GAK();
+                            entityManager = (GAKManager) ResourceLocator.getBean("GAKManager");
+                            break;
+                        default:
+                            activity = new Exam();
+                            entityManager = (ExamManager) ResourceLocator.getBean("examManager");
                             break;
                     }
-
-                }else {
-                    switch (activity.getTypeOfLoad()){
-                        case BUDGET:
-                            planTable = plan.getPlanTableSpringBudget();
-                            break;
-                        case OFF_BUDGET:
-                            planTable = plan.getPlanTableSpringPlatno();
-                            break;
-                        case SHORT:
-                            planTable = plan.getPlanTableAutumnShort();
-                            break;
+                    activity.setNum(ip.getNumberOf());
+                    activity.setPrepod(userAccount);
+                    activity.setDate(new LocalDate(jdcCOForActivites.getDate()).plusDays(1));
+                    switch (jcbCOFATypeOfLoad.getSelectedIndex()){
+                        case 0:activity.setTypeOfLoad(TypeOfLoad.BUDGET); break;
+                        case 1:activity.setTypeOfLoad(TypeOfLoad.OFF_BUDGET); break;
+                        case 2:activity.setTypeOfLoad(TypeOfLoad.SHORT);break;
+                        default:activity.setTypeOfLoad(TypeOfLoad.BUDGET); break;
                     }
-                }
-                if(!ldCOFO.isAfter(startSearchDate)){//поменять на месте а не здесь
-                    LocalDate lol =ldCOFO;
-                    ldCOFO=startSearchDate;
-                    startSearchDate = lol;
-                }
+                    PlanManager planManager = (PlanManager) ResourceLocator.getBean("planManager");
+                    Plan plan = planManager.getByPrepodAndStartYear(userAccount,autumnSpringSpacer.getStartYear());
+                    LocalDate startSearchDate = new LocalDate();
+                    if(plan==null) throw new IOException();
 
-                switch (jcbCOForActivites.getSelectedIndex()){
-                    case 0:
-                        ConsultManager consultManager = (ConsultManager) ResourceLocator.getBean("consultManager");
-                        ArrayList<Consult> consults = consultManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for(Consult consult:consults){
-                            alreadyHours += consult.getHours();
-                        }
-                        if(alreadyHours /*+activity.getHours()*/>=(planTable.getZachet())) throw new OutOfHoursException();
-                        break;
-
-                    case 1:
-                        ExamManager examManager = (ExamManager) ResourceLocator.getBean("examManager");
-                        ArrayList<Exam> exams =examManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (Exam exam:exams){
-                            alreadyHours += exam.getHours();
-                        }
-                        if(alreadyHours /*+activity.getHours()*/>=(planTable.getExam())) throw new OutOfHoursException();
-                        break;
-
-                    case 2:
-                        KursProjectManager kursProjectManager = (KursProjectManager) ResourceLocator.getBean("kursProjectManager");
-                        ArrayList<KursProject> kursProjects =kursProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (KursProject kursProject:kursProjects){
-                            MainForm.this.alreadyHours += kursProject.getHours();
-                        }
-                        if(MainForm.this.alreadyHours /*+activity.getHours()*/>=(planTable.getLeadingKProject())) throw new OutOfHoursException();
-                        break;
-
-                    case 3:
+                    startSearchDate.withYear(autumnSpringSpacer.getStartYear());
+                    if ((startSearchDate.getYear()%4==0&& startSearchDate.getYear()%100!=0)||(startSearchDate.getYear()%400==0) ){
+                        startSearchDate.withDayOfYear(244);
+                    } else startSearchDate.withDayOfYear(243);
+                    startSearchDate.withDayOfYear(243);
+                    if(autumnSpringSpacer.getSpacerDate().isAfter(ldCOFO)){
+                    /*
                         KursRabManager kursRabManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
-                        ArrayList<KursRab> kursRabs = kursRabManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (KursRab kursRab:kursRabs){
-                            alreadyHours += kursRab.getHours();
-                        }
-                        if(alreadyHours/*+activity.getHours()*/>=(planTable.getLeadingKRab())) throw new OutOfHoursException();
-                        break;
-                    case 4:
-                        DiplomaProjectManager diplomaProjectManager = (DiplomaProjectManager) ResourceLocator.getBean("diplomaProjectManager");
-                        ArrayList<DiplomaProject> diplomaProjects = diplomaProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (DiplomaProject diplomaProject:diplomaProjects){
-                            alreadyHours += diplomaProject.getHours();
+
+                        ArrayList<Exam> exams = examManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
+                        ArrayList<Consult> consults = consultManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
+                        ArrayList<DiplomaProject> diplomaProjects = diplomaProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
+                        ArrayList<KursProject> kursProjects = kursProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
+                        ArrayList<KursRab> kursRabs = kursRabManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());
+                        ArrayList<Practice> practices = practiceManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, autumnSpringSpacer.getSpacerDate(), activity.getTypeOfLoad());*/
+                        switch (activity.getTypeOfLoad()) {
+                            case BUDGET:
+                                planTable = plan.getPlanTableAutumnBudget();
+                                /*
+                                PairManager pairManager = (PairManager) ResourceLocator.getBean("pairManager");
+
+                                ArrayList<Pair> pairs = pairManager.searchCustom(userAccount.getName(),userAccount.getLastName(),startSearchDate,autumnSpringSpacer.getSpacerDate(),1,2,0);
+                                if ((pairs.size()+exams.size()+consults.size()+diplomaProjects.size()+kursProjects.size()+kursRabs.size()+practices.size())>plan.getBudgetHourly()) throw new OutOfHoursException();*/
+                                break;
+                            case OFF_BUDGET:
+                                planTable = plan.getPlanTableAutumnPlatno();
+                                break;
+                            case SHORT:
+                                planTable = plan.getPlanTableAutumnShort();
+                                break;
                         }
 
-                        if(alreadyHours/*+activity.getHours()*/>=(planTable.getDiplomDesign())) throw new OutOfHoursException();
-                        break;
-                    case 5:
-                        PracticeManager practiceManager = (PracticeManager) ResourceLocator.getBean("practiceManager");
-                        ArrayList<Practice> practices = practiceManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (Practice practice:practices){
-                            alreadyHours += practice.getHours();
+                    }else {
+                        switch (activity.getTypeOfLoad()){
+                            case BUDGET:
+                                planTable = plan.getPlanTableSpringBudget();
+                                break;
+                            case OFF_BUDGET:
+                                planTable = plan.getPlanTableSpringPlatno();
+                                break;
+                            case SHORT:
+                                planTable = plan.getPlanTableAutumnShort();
+                                break;
                         }
+                    }
+                    if(planTable==null) throw new Exception();
+                    if(!ldCOFO.isAfter(autumnSpringSpacer.getSpacerDate())){//поменять на месте а не здесь
+                        //LocalDate lol =ldCOFO;
+                        //ldCOFO=startSearchDate;
+                        startSearchDate = autumnSpringSpacer.getSpacerDate();
+                    }
 
-                        if(alreadyHours/*+activity.getHours()*/>=(planTable.getPractice())) throw new OutOfHoursException();
-                        break;
-                    case 6:
-                        ZachetManager zachetManager = (ZachetManager) ResourceLocator.getBean("zachetManager");
-                        ArrayList<Zachet> zachets = zachetManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (Zachet zachet:zachets){
-                            alreadyHours += zachet.getHours();
-                        }
-                        if(alreadyHours/*+activity.getHours()*/>=(planTable.getZachet())) throw new OutOfHoursException();
+                    switch (jcbCOForActivites.getSelectedIndex()){
+                        case 0:
+                            ConsultManager consultManager = (ConsultManager) ResourceLocator.getBean("consultManager");
+                            ArrayList<Consult> consults = consultManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for(Consult consult:consults){
+                                alreadyHours += consult.getHours();
+                            }
+                            if(alreadyHours +activity.getHours()>=(planTable.getConsult())){
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getConsult())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
 
-                        break;
-                    case 7:
-                        GAKManager gakManager = (GAKManager) ResourceLocator.getBean("GAKManager");
-                        ArrayList<GAK> gaks = gakManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
-                        alreadyHours = 0;
-                        for (GAK gak:gaks){
-                            alreadyHours += gak.getHours();
-                        }
-                        if(alreadyHours/*+activity.getHours()*/>=(planTable.getMeeting())) throw new OutOfHoursException();
-                        break;
-                    default:
-                        ExamManager examManager1 = (ExamManager) ResourceLocator.getBean("examManager");
-                        if(examManager1.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad()).size()*Exam.getFactor()/*+activity.getHours()*/>=(planTable.getExam())) throw new OutOfHoursException();
-                        break;
-                }
+                        case 1:
+                            ExamManager examManager = (ExamManager) ResourceLocator.getBean("examManager");
+                            ArrayList<Exam> exams =examManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (Exam exam:exams){
+                                alreadyHours += exam.getHours();
+                            }
+                            if(alreadyHours +activity.getHours()>=(planTable.getExam())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getExam())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
 
-                //noinspection unchecked
-                entityManager.create(activity);
-                JOptionPane.showMessageDialog(jfrm,"Выполнено");
+                        case 2:
+                            KursProjectManager kursProjectManager = (KursProjectManager) ResourceLocator.getBean("kursProjectManager");
+                            ArrayList<KursProject> kursProjects =kursProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (KursProject kursProject:kursProjects){
+                                MainForm.this.alreadyHours += kursProject.getHours();
+                            }
+                            if(MainForm.this.alreadyHours +activity.getHours()>=(planTable.getLeadingKProject())){
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getLeadingKProject())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+
+                        case 3:
+                            KursRabManager kursRabManager = (KursRabManager) ResourceLocator.getBean("kursRabManager");
+                            ArrayList<KursRab> kursRabs = kursRabManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (KursRab kursRab:kursRabs){
+                                alreadyHours += kursRab.getHours();
+                            }
+                            if(alreadyHours+activity.getHours()>=(planTable.getLeadingKRab())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getLeadingKRab())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+                        case 4:
+                            DiplomaProjectManager diplomaProjectManager = (DiplomaProjectManager) ResourceLocator.getBean("diplomaProjectManager");
+                            ArrayList<DiplomaProject> diplomaProjects = diplomaProjectManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (DiplomaProject diplomaProject:diplomaProjects){
+                                alreadyHours += diplomaProject.getHours();
+                            }
+
+                            if(alreadyHours+activity.getHours()>=(planTable.getDiplomDesign())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getDiplomDesign())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+                        case 5:
+                            PracticeManager practiceManager = (PracticeManager) ResourceLocator.getBean("practiceManager");
+                            ArrayList<Practice> practices = practiceManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (Practice practice:practices){
+                                alreadyHours += practice.getHours();
+                            }
+
+                            if(alreadyHours+activity.getHours()>=(planTable.getPractice())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getPractice())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+                        case 6:
+                            ZachetManager zachetManager = (ZachetManager) ResourceLocator.getBean("zachetManager");
+                            ArrayList<Zachet> zachets = zachetManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (Zachet zachet:zachets){
+                                alreadyHours += zachet.getHours();
+                            }
+                            if(alreadyHours+activity.getHours()>=(planTable.getZachet())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getZachet())+" часов.\nПосле добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+
+                            break;
+                        case 7:
+                            GAKManager gakManager = (GAKManager) ResourceLocator.getBean("GAKManager");
+                            ArrayList<GAK> gaks = gakManager.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (GAK gak:gaks){
+                                alreadyHours += gak.getHours();
+                            }
+                            if(alreadyHours+activity.getHours()>=(planTable.getMeeting())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getMeeting())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+                        default:
+                            ExamManager examManager1 = (ExamManager) ResourceLocator.getBean("examManager");
+                            ArrayList<Exam> exams1 =examManager1.getByPrepodDateTypeOfLoad(userAccount, startSearchDate, ldCOFO, activity.getTypeOfLoad());
+                            alreadyHours = 0;
+                            for (Exam exam:exams1){
+                                alreadyHours += exam.getHours();
+                            }
+                            if(alreadyHours +activity.getHours()>=(planTable.getExam())) {
+                                res = JOptionPane.showConfirmDialog(jfrm, "Плановое время для выбранного типа нагрузки на этот семестр " + String.format("%.2g", planTable.getExam())+" часов.\n" +
+                                        "После добавления этой нагрузки, фактическое значение будет составлять "+String.format("%.2g", alreadyHours +activity.getHours()) + " часов, что выходит за заданные границы. Вы уверены, что желаете добавить это занятие?","Преввышение плана.",JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+                                if(res!=JOptionPane.OK_OPTION) throw new OutOfHoursException();
+                            }
+                            break;
+                    }
+
+                    //noinspection unchecked
+                    entityManager.create(activity);
+                    JOptionPane.showMessageDialog(jfrm,"Выполнено");
+            }
             }catch (IOException e1){
                 JOptionPane.showMessageDialog(jfrm,"Не найден индивидуальный план семестра");
             }
             catch (OutOfHoursException e2){
-                JOptionPane.showMessageDialog(jfrm,"Превышен план на семестр","Не удачная попытка добавления",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(jfrm,"В связи с превышением плана, добавление было отменено","Добаление прервано",JOptionPane.WARNING_MESSAGE);
             }
             catch (TranstortAcrossSemesterException ex){
                 JOptionPane.showMessageDialog(jfrm,"Не найдена дата перехода между осенним и летним семестром");
+            } catch (Exception e1) {
+                JOptionPane.showConfirmDialog(jfrm,"Не обработанная ошибка");
             }
             }
         });
@@ -1095,9 +1167,7 @@ class MainForm {
             CustomReportUtil3 customReportUtil = new CustomReportUtil3(fileChooser.getSelectedFile(), new LocalDate(jdcReportStart.getDate()), new LocalDate(jcReportFinish.getDate()), userAccount.getFaculty());
             try {
                 customReportUtil.makeReport();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
+            } catch (IOException | InvalidFormatException e) {
                 e.printStackTrace();
             } catch (WrongDatesException e) {
                     JOptionPane.showMessageDialog(jfrm,"Ошибка в датах, возможно дата начала и конца находятся в разных семестрах","Ошибка в датах",JOptionPane.WARNING_MESSAGE);
@@ -1154,6 +1224,8 @@ class MainForm {
     private void setHolidaysActionPerfomed() throws AlreadyInUseException{
         LocalDate lcd1 = new LocalDate(jcHolidayStart.getDate()).plusDays(1);
         LocalDate lcd2 = new LocalDate(jcHolidayFinish.getDate()).plusDays(1);
+        int allMarkedDates = 0;
+        int newMarkedDates = 0;
         if(lcd1.isAfter(lcd2)){
             JOptionPane.showMessageDialog(jfrm,"Дата начала не должнабыть позже даты окончания");
             return;
@@ -1164,6 +1236,8 @@ class MainForm {
         if(userAccount.getPasskey()!=prepod.getPasskey()){
             throw new AlreadyInUseException();
         }
+        PairDateBuilder pairDateBuilder = PairDateBuilder.getPairDateBuilder();
+        pairDateBuilder = pairDateBuilder.withHoliday(holidFact);
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         for(LocalDate j=lcd1;!j.equals(lcd2.plusDays(1));j=j.plusDays(1)){
             PairDate persistDate = null;
@@ -1171,18 +1245,30 @@ class MainForm {
                 persistDate = pairDateManager.findByDate(j);
             } catch ( HibernateJdbcException e) {
                 JOptionPane.showMessageDialog(jfrm, "Сбой подключения к базе данных. Проверьте её доступность и повторите попытку", "Внимание!", JOptionPane.WARNING_MESSAGE);
-            }
-            if(persistDate!= null && persistDate.getId()>-1 && persistDate.getHoliday()!=holidFact){
+            }try {
+            if(persistDate!= null && persistDate.getId()>-1 && persistDate.getHoliday()!=holidFact) {
                 persistDate.setHoliday(holidFact);
 
-                try {
-                    pairDateManager.update( persistDate);
-                } catch (HibernateJdbcException e) {
-                    JOptionPane.showMessageDialog(jfrm,"Сбой подключения к базе данных. Проверьте её доступность и повторите попытку","Внимание!",JOptionPane.WARNING_MESSAGE);
-                }
+
+                pairDateManager.update(persistDate);
+                allMarkedDates++;
+            }else {
+
+                pairDateBuilder.withPairDate(lcd1);
+                PairDate date = pairDateBuilder.build();
+                pairDateManager.create(date);
+
+                allMarkedDates++;
+            }
+            }catch (HibernateJdbcException e) {
+                JOptionPane.showMessageDialog(jfrm,"Сбой во время работы с базой данных. Проверьте её доступность и повторите попытку","Операция не завершена",JOptionPane.ERROR_MESSAGE);
+
             }
         }
-        JOptionPane.showMessageDialog(jfrm,"Информация добавлена");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Поставлено ").append(allMarkedDates).append(" отметок");
+        if (newMarkedDates>0) stringBuilder.append("в том числе для ").append(newMarkedDates).append(newMarkedDates>1?" отметок были добавлены даты":"отметки была добавлена дата");
+        JOptionPane.showMessageDialog(jfrm,stringBuilder.toString(),"Успешное выполнение",JOptionPane.INFORMATION_MESSAGE);
 
     }
 

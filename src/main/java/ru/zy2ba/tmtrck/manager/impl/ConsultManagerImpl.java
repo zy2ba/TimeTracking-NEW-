@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import ru.zy2ba.tmtrck.dao.ConsultDao;
 import ru.zy2ba.tmtrck.entity.ActivityTypes.Consult;
-import ru.zy2ba.tmtrck.entity.PairDate;
 import ru.zy2ba.tmtrck.entity.Prepod;
 import ru.zy2ba.tmtrck.entity.enums.TypeOfLoad;
 import ru.zy2ba.tmtrck.manager.ActivityManager;
@@ -15,7 +14,8 @@ import ru.zy2ba.tmtrck.manager.ConsultManager;
 import java.util.ArrayList;
 
 /**
- * Created by Zy2ba on 21.05.2015.
+ * @author Zy2ba
+ * @since 21.05.2015
  */
 public class ConsultManagerImpl implements ConsultManager,ActivityManager<Consult>{
     @Autowired

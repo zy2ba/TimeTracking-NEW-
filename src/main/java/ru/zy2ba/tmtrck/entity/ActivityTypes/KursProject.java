@@ -170,7 +170,6 @@ public class KursProject implements SettableActivity,TimeTableElement{
     public boolean getIsOnHoliday() {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         PairDate pairDate = pairDateManager.findByDate(date);
-        if (pairDate==null) return false;
-        return (pairDateManager.findByDate(date)).getHoliday();
+        return pairDate != null && (pairDateManager.findByDate(date)).getHoliday();
     }
 }

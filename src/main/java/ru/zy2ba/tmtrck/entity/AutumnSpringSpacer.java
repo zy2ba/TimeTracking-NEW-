@@ -7,7 +7,8 @@ import org.joda.time.LocalDate;
 import javax.persistence.*;
 
 /**
- * Created by Zy2ba on 27.05.2015.
+ * @author Zy2ba
+ * @since 27.05.2015
  */
 @Entity
 @Table(name = "AUTUMN_SPRING_SPACER")

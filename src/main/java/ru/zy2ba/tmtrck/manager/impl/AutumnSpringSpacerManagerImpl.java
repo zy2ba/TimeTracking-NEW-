@@ -8,7 +8,8 @@ import ru.zy2ba.tmtrck.entity.AutumnSpringSpacer;
 import ru.zy2ba.tmtrck.manager.AutumnSpringSpacerManager;
 
 /**
- * Created by Zy2ba on 27.05.2015.
+ * @author Zy2ba
+ * @since 27.05.2015
  */
 public class AutumnSpringSpacerManagerImpl implements AutumnSpringSpacerManager {
     @Autowired

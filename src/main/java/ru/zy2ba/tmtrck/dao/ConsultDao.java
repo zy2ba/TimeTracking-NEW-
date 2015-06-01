@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Zy2ba on 21.05.2015.
+ * @author Zy2ba
+ * @since 21.05.2015
  */
 public interface ConsultDao extends JpaRepository<Consult,Long> {
     ArrayList<Consult> findByPrepod(Prepod prepod);

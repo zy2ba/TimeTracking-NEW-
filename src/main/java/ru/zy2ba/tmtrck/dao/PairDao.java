@@ -1,11 +1,8 @@
 package ru.zy2ba.tmtrck.dao;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import ru.zy2ba.tmtrck.entity.*;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 
 /**

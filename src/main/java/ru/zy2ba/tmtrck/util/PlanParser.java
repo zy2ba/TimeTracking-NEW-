@@ -91,7 +91,7 @@ public class PlanParser {
                         startYear = Integer.decode(years.nextToken());
                         finishYear = Integer.decode(years.nextToken());
                     }
-                    if(cell.getStringCellValue().indexOf("Бюджетная нагрузка") != -1){
+                    if(cell.getStringCellValue().contains("Бюджетная нагрузка")){
                         while (!cell.getStringCellValue().equals("ИТОГО за семестр")){
                             row = rowIterator.next();
                             cell = row.getCell(0);
@@ -135,6 +135,7 @@ public class PlanParser {
                         PlanTable springBudgetTable = new PlanTable();
                         cells.next();
                         cells.next();
+                        cells.next();
                         cell = cells.next();
                         springBudgetTable.setLection(cell.getNumericCellValue());
                         cell = cells.next();
@@ -166,12 +167,13 @@ public class PlanParser {
                     }
 
 
-                    if(cell.getStringCellValue().indexOf("Почасовая нагрузка") != -1){
+                    if(cell.getStringCellValue().contains("Почасовая нагрузка")){
                         while (!cell.getStringCellValue().equals("ИТОГО за семестр")){
                             row = rowIterator.next();
                             cell = row.getCell(0);
                         }
                         cells = row.cellIterator();
+                        cells.next();
                         cells.next();
                         cells.next();
                         PlanTable autumnPlatnoTable = new PlanTable();
@@ -207,6 +209,7 @@ public class PlanParser {
                         cells = row.cellIterator();
                         cells.next();
                         cells.next();
+                        cells.next();
 
                         PlanTable springPlatnoTable = new PlanTable();
                         cell = cells.next();
@@ -240,12 +243,13 @@ public class PlanParser {
                     }
 
 
-                    if(cell.getStringCellValue().indexOf("сокращенное обучение") != -1){
+                    if(cell.getStringCellValue().contains("сокращенное обучение")){
                         while (!cell.getStringCellValue().equals("ИТОГО за семестр")){
                             row = rowIterator.next();
                             cell = row.getCell(0);
                         }
                         cells = row.cellIterator();
+                        cells.next();
                         cells.next();
                         cells.next();
                         PlanTable autumnShortTable = new PlanTable();
@@ -281,6 +285,7 @@ public class PlanParser {
                         cells = row.cellIterator();
                         cells.next();
                         cells.next();
+                        cells.next();
 
                         PlanTable springShortTable = new PlanTable();
                         cell = cells.next();
@@ -313,7 +318,7 @@ public class PlanParser {
                      //   springShortTable.setPlan(makeablePlan);
                     }
 
-                    if(cell.getStringCellValue().indexOf("Распределение учебной нагрузки") != -1){
+                    if(cell.getStringCellValue().contains("Распределение учебной нагрузки")){
                         rowIterator.next();
                         row = rowIterator.next();
                         cells = row.cellIterator();

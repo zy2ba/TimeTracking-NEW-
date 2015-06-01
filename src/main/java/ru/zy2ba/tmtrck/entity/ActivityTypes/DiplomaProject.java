@@ -13,7 +13,8 @@ import ru.zy2ba.tmtrck.util.ResourceLocator;
 import javax.persistence.*;
 
 /**
- * Created by Zy2ba on 21.05.2015.
+ * @author Zy2ba
+ * @since 21.05.2015
  */
 @Entity
 @Table(name = "DIPLOMA_PROJECT")
@@ -168,7 +169,6 @@ public class DiplomaProject  implements SettableActivity,TimeTableElement {
     public boolean getIsOnHoliday() {
         PairDateManager pairDateManager = (PairDateManager) ResourceLocator.getBean("pairDateManager");
         PairDate pairDate = pairDateManager.findByDate(date);
-        if (pairDate==null) return false;
-        return (pairDateManager.findByDate(date)).getHoliday();
+        return pairDate != null && (pairDateManager.findByDate(date)).getHoliday();
     }
 }
